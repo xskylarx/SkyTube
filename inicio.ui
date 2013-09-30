@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>579</width>
+    <width>832</width>
     <height>249</height>
    </rect>
   </property>
@@ -16,6 +16,9 @@
   <property name="windowIcon">
    <iconset>
     <normaloff>imagenes/logo.png</normaloff>imagenes/logo.png</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
   </property>
   <widget class="QPushButton" name="btn_valida">
    <property name="geometry">
@@ -60,19 +63,152 @@
     <enum>Qt::Horizontal</enum>
    </property>
   </widget>
+  <widget class="QLabel" name="label_7">
+   <property name="geometry">
+    <rect>
+     <x>14</x>
+     <y>43</y>
+     <width>551</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string>Ejemplo: http://www.youtube.com/watch?v=QJO3ROT-A4E </string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lbl_desc">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>20</y>
+     <width>461</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Introduce la URL de Youtube</string>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_vlc">
+   <property name="geometry">
+    <rect>
+     <x>185</x>
+     <y>40</y>
+     <width>75</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Abre  Video en Reproductor VLC</string>
+   </property>
+   <property name="text">
+    <string>Abrir VLC</string>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>imagenes/eye.png</normaloff>imagenes/eye.png</iconset>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_otro">
+   <property name="geometry">
+    <rect>
+     <x>261</x>
+     <y>40</y>
+     <width>131</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Regresar al Formulario de busqueda</string>
+   </property>
+   <property name="text">
+    <string>Descargar Otro Video</string>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>imagenes/download.png</normaloff>imagenes/download.png</iconset>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_folder">
+   <property name="geometry">
+    <rect>
+     <x>530</x>
+     <y>20</y>
+     <width>41</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Motrar Videos</string>
+   </property>
+   <property name="text">
+    <string>&gt;</string>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>imagenes/video.png</normaloff>imagenes/video.png</iconset>
+   </property>
+  </widget>
+  <widget class="QTreeView" name="treeView">
+   <property name="geometry">
+    <rect>
+     <x>575</x>
+     <y>21</y>
+     <width>251</width>
+     <height>221</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Directorio Videos</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="sortingEnabled">
+    <bool>true</bool>
+   </property>
+   <property name="animated">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lbl_perfil">
+   <property name="geometry">
+    <rect>
+     <x>580</x>
+     <y>5</y>
+     <width>211</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
   <widget class="QGroupBox" name="groupBox">
    <property name="geometry">
     <rect>
-     <x>13</x>
-     <y>80</y>
+     <x>15</x>
+     <y>75</y>
      <width>551</width>
      <height>161</height>
     </rect>
    </property>
+   <property name="autoFillBackground">
+    <bool>true</bool>
+   </property>
    <property name="title">
     <string/>
    </property>
-   <widget class="QLabel" name="label">
+   <property name="flat">
+    <bool>false</bool>
+   </property>
+   <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -85,7 +221,7 @@
      <string>Autor:</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_2">
+   <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -98,7 +234,7 @@
      <string>ID:</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_3">
+   <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -111,7 +247,7 @@
      <string>Duracion:</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_4">
+   <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -124,7 +260,7 @@
      <string>Rating:</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_5">
+   <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -145,6 +281,9 @@
       <width>481</width>
       <height>16</height>
      </rect>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
     </property>
     <property name="text">
      <string>Autor:</string>
@@ -247,10 +386,10 @@
    <widget class="QLabel" name="lbl_calidad">
     <property name="geometry">
      <rect>
-      <x>364</x>
+      <x>417</x>
       <y>137</y>
       <width>171</width>
-      <height>20</height>
+      <height>30</height>
      </rect>
     </property>
     <property name="text">
@@ -258,96 +397,20 @@
     </property>
    </widget>
   </widget>
-  <widget class="QLabel" name="label_7">
+  <widget class="QPushButton" name="btn_folder_2">
    <property name="geometry">
     <rect>
-     <x>14</x>
-     <y>43</y>
-     <width>551</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true"/>
-   </property>
-   <property name="text">
-    <string>Ejemplo: http://www.youtube.com/watch?v=QJO3ROT-A4E </string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="lbl_desc">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>20</y>
-     <width>461</width>
-     <height>20</height>
+     <x>800</x>
+     <y>3</y>
+     <width>21</width>
+     <height>16</height>
     </rect>
    </property>
    <property name="toolTip">
-    <string>Introduce la URL de Youtube</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Abrir Carpeta de Videos&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="btn_vlc">
-   <property name="geometry">
-    <rect>
-     <x>185</x>
-     <y>40</y>
-     <width>75</width>
-     <height>24</height>
-    </rect>
-   </property>
-   <property name="toolTip">
-    <string>Abre  Video en Reproductor VLC</string>
-   </property>
-   <property name="text">
-    <string>Abrir VLC</string>
-   </property>
-   <property name="icon">
-    <iconset>
-     <normaloff>imagenes/eye.png</normaloff>imagenes/eye.png</iconset>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="btn_otro">
-   <property name="geometry">
-    <rect>
-     <x>261</x>
-     <y>40</y>
-     <width>131</width>
-     <height>24</height>
-    </rect>
-   </property>
-   <property name="toolTip">
-    <string>Regresar al Formulario de busqueda</string>
-   </property>
-   <property name="text">
-    <string>Descargar Otro Video</string>
-   </property>
-   <property name="icon">
-    <iconset>
-     <normaloff>imagenes/download.png</normaloff>imagenes/download.png</iconset>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="btn_folder">
-   <property name="geometry">
-    <rect>
-     <x>530</x>
-     <y>20</y>
-     <width>41</width>
-     <height>24</height>
-    </rect>
-   </property>
-   <property name="toolTip">
-    <string>Abre la carpeta Videos</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="icon">
-    <iconset>
-     <normaloff>imagenes/video.png</normaloff>imagenes/video.png</iconset>
+    <string>...</string>
    </property>
   </widget>
  </widget>

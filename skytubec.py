@@ -1,4 +1,12 @@
-__author__ = 'soporte'
+__author__ = 'xskylarx'
+# -*- coding: utf-8 -*-
+
+# Python + PyQt4 By Skylar 
+#
+# Creado: 29 - sep - 2013
+#      Por: xskylarx
+# xskyofx@gmail.com
+# Por favor si modificas algo haz referencia al autor.
 from pafy import Pafy
 import os
 import sys

@@ -1,5 +1,12 @@
-__author__ = 'soporte'
-# Let's start with some default (for me) imports...
+__author__ = 'xskylarx'
+# -*- coding: utf-8 -*-
+
+# Python + PyQt4 By Skylar 
+#
+# Creado: 29 - sep - 2013
+#      Por: xskylarx
+# xskyofx@gmail.com
+# Por favor si modificas algo haz referencia al autor.
 import sys
 from cx_Freeze import setup, Executable
 

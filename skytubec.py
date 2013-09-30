@@ -6,6 +6,8 @@ __author__ = 'xskylarx'
 # Creado: 29 - sep - 2013
 #      Por: xskylarx
 # xskyofx@gmail.com
+#
+#v1.2 -> se corrige Bug al recibir simbolos como " | ' <>-_:.,
 # Por favor si modificas algo haz referencia al autor.
 from pafy import Pafy
 import os
@@ -30,7 +32,7 @@ try:
         video =Pafy(url)
         os.system('cls')
         print('')
-        print('SkyTube Modo Consola =D ... V1.1')
+        print('SkyTube Modo Consola =D ... V1.2')
         print('')
         print('')
         print('Tu video ' + video.title + ' se esta descargando ..')
@@ -39,7 +41,15 @@ try:
 
         best = video.getbest(preftype="mp4")
         titulo = best.title
+        titulo = str(titulo).replace('.','')
         titulo = str(titulo).replace('"','')
+        titulo = str(titulo).replace(':','')
+        titulo = str(titulo).replace('_','')
+        titulo = str(titulo).replace('-','')
+        titulo = str(titulo).replace(';','')
+        titulo = str(titulo).replace('|','')
+        titulo = str(titulo).replace("'",'')
+
         filename = os.path.join (os.environ['USERPROFILE'],'videos') + '\\' + titulo + '.' + best.extension
         best.download(quiet=False, filepath=filename)
         print('Tu video se Descargo Correctamente, lo encuentras en tu carpeta de Videos .. ')

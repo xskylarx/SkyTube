@@ -1,11 +1,14 @@
 __author__ = 'xskylarx'
-# -*- coding: utf-8 -*-
+
 
 # Python + PyQt4 By Skylar
 #
 # Creado: 29 - sep - 2013
 #      Por: xskylarx
 # xskyofx@gmail.com
+#V1.2 ->
+# Se añade Directorio de videos, con la cual se puede dar doble clic y abrir el video en VLC.
+#
 # Por favor si modificas algo haz referencia al autor.
 from pafy import  Pafy # esta es la libreria para leer la informacion
 from PyQt4 import QtGui, QtCore
@@ -24,8 +27,8 @@ class v_skytube(QtGui.QDialog):
         self.connect(self.vskytube.btn_valida,QtCore.SIGNAL('clicked()'), self.valida)
         self.resize(579,66)
         self.vskytube.label_7.setStyleSheet("color:grey;")
-        self.setWindowTitle('SkyTube Download v.1.1')
-        self.setMaximumSize(579,250)
+        self.setWindowTitle('SkyTube Download v.1.2')
+        self.setMaximumSize(832,250)
         self.setMinimumSize(579,66)
         self.vskytube.groupBox.setVisible(False)
         self.connect(self.vskytube.btn_valida_2,QtCore.SIGNAL('clicked()'), self.descarga)
@@ -34,7 +37,53 @@ class v_skytube(QtGui.QDialog):
         self.vskytube.lbl_desc.setVisible(False)
         self.vskytube.btn_vlc.setVisible(False)
         self.vskytube.btn_otro.setVisible(False)
-        self.connect(self.vskytube.btn_folder,QtCore.SIGNAL('clicked()'), self.folder)
+        self.connect(self.vskytube.btn_folder,QtCore.SIGNAL('clicked()'), self.crea_directorio)
+        self.vskytube.treeView.doubleClicked.connect(self.directorio)
+        #self.vskytube.la.doubleClicked.connect(self.directorio)
+        self.vskytube.treeView.setVisible(False)
+        self.vskytube.lbl_perfil.setVisible(False)
+        self.setStyleSheet("background-image: url('imagenes/skylogo.png');")
+        self.connect(self.vskytube.btn_folder_2,QtCore.SIGNAL('clicked()'), self.folder)
+
+
+
+    def crea_directorio(self):
+        if self.vskytube.btn_folder.text() == '>':
+            self.resize(832,250)
+            self.vskytube.treeView.setVisible(True)
+            self.vskytube.lbl_perfil.setVisible(True)
+            self.vskytube.btn_folder_2.setVisible(True)
+            self.vskytube.btn_folder.setText('<')
+            self.vskytube.btn_folder.setToolTip('Motrar Videos')
+            self.vskytube.lbl_perfil.setText((os.path.join (os.environ['USERPROFILE'],'videos')))
+        else:
+            self.resize(579,66)
+            self.vskytube.treeView.setVisible(False)
+            self.vskytube.lbl_perfil.setVisible(False)
+            self.vskytube.btn_folder_2.setVisible(False)
+            self.vskytube.btn_folder.setText('>')
+            self.vskytube.btn_folder.setToolTip('Ocultar Videos')
+            self.vskytube.lbl_perfil.setVisible(False)
+
+        fileSystemModel = QtGui.QFileSystemModel(self.vskytube.treeView)
+        fileSystemModel.setReadOnly(True)
+        root = fileSystemModel.setRootPath((os.path.join (os.environ['USERPROFILE'],'videos')))
+        self.vskytube.treeView.setModel(fileSystemModel)
+        self.vskytube.treeView.setRootIndex(root)
+        self.vskytube.treeView.setColumnHidden(1,True)
+        self.vskytube.treeView.setColumnHidden(2,True)
+        self.vskytube.treeView.setColumnHidden(3,True)
+        self.vskytube.treeView.setHeaderHidden(True)
+
+
+    def directorio(self, mensaje):
+        if os.path.isfile('c:\progra~1\VideoLAN\VLC\\vlc.exe'):
+            subprocess.Popen('c:\progra~1\VideoLAN\VLC\\vlc.exe "' + str((os.path.join (os.environ['USERPROFILE'],'videos'))) + '\\' +str(mensaje.data()) + '"' )
+        elif os.path.isfile('c:\progra~2\VideoLAN\VLC\\vlc.exe'):
+            subprocess.Popen('c:\progra~2\VideoLAN\VLC\\vlc.exe "' + str((os.path.join (os.environ['USERPROFILE'],'videos'))) + '\\' +str(mensaje.data()) + '"')
+        else:
+            QtGui.QMessageBox.about(self,'\nError VlC','Para poder reproducir los videos desde SkyTube necesitas VLC \n tus videos estan en la  siguiente ruta:\n\n '\
+                                                      + str((os.path.join (os.environ['USERPROFILE'],'videos'))))
 
     def folder(self):
         perfil = (os.path.join (os.environ['USERPROFILE'],'videos'))
@@ -46,6 +95,11 @@ class v_skytube(QtGui.QDialog):
             self.vskytube.lineEdit.setVisible(False)
             self.vskytube.btn_valida.setVisible(False)
             self.vskytube.label_7.setVisible(False)
+            self.vskytube.btn_folder.setVisible(False)
+            self.vskytube.treeView.setVisible(False)
+            self.vskytube.btn_folder_2.setVisible(False)
+            self.vskytube.lbl_perfil.setVisible(False)
+            self.vskytube.groupBox.setVisible(False)
             self.vskytube.lbl_desc.setStyleSheet("color:red;")
             self.vskytube.lbl_desc.setText('Tu video se esta descargado, puede tardar varios minutos ...')
             self.vskytube.lbl_desc.setVisible(True)
@@ -71,6 +125,7 @@ class v_skytube(QtGui.QDialog):
         self.vskytube.lineEdit.setVisible(True)
         self.vskytube.btn_valida.setVisible(True)
         self.vskytube.label_7.setVisible(True)
+        self.vskytube.btn_folder.setVisible(True)
         self.vskytube.lbl_desc.setVisible(False)
         self.vskytube.btn_vlc.setVisible(False)
         self.vskytube.btn_otro.setVisible(False)
@@ -92,6 +147,16 @@ class v_skytube(QtGui.QDialog):
 
     def valida(self):
         try:
+            if self.vskytube.btn_folder.text() == '<':
+                self.vskytube.btn_folder.setText('>')
+                self.vskytube.treeView.setVisible(False)
+                self.vskytube.btn_folder_2.setVisible(False)
+                self.vskytube.lbl_perfil.setVisible(False)
+                self.vskytube.lbl_perfil.setVisible(False)
+            else:
+                pass
+
+
             self.vskytube.groupBox.setVisible(False)
             self.resize(579,66)
             self.vskytube.lbl_imagen.setText('sin imagen')

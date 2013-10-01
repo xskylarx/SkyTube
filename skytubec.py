@@ -49,8 +49,13 @@ try:
         titulo = str(titulo).replace(';','')
         titulo = str(titulo).replace('|','')
         titulo = str(titulo).replace("'",'')
+        titulo = str(titulo).replace("+",'')
+        titulo = str(titulo).replace("!",'')
+        titulo = str(titulo).replace("/",'')
+        titulo = str(titulo).replace("\\",'')
 
         filename = os.path.join (os.environ['USERPROFILE'],'videos') + '\\' + titulo + '.' + best.extension
+
         best.download(quiet=False, filepath=filename)
         print('Tu video se Descargo Correctamente, lo encuentras en tu carpeta de Videos .. ')
         print('Esta ventana se cerrara en 5 segundos...')

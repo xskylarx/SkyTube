@@ -136,7 +136,18 @@ class v_skytube(QtGui.QDialog):
 
         best = video.getbest(preftype="mp4")
         titulo = best.title
+        titulo = str(titulo).replace('.','')
         titulo = str(titulo).replace('"','')
+        titulo = str(titulo).replace(':','')
+        titulo = str(titulo).replace('_','')
+        titulo = str(titulo).replace('-','')
+        titulo = str(titulo).replace(';','')
+        titulo = str(titulo).replace('|','')
+        titulo = str(titulo).replace("'",'')
+        titulo = str(titulo).replace("+",'')
+        titulo = str(titulo).replace("!",'')
+        titulo = str(titulo).replace("/",'')
+        titulo = str(titulo).replace("\\",'')
         perfil = (os.path.join (os.environ['USERPROFILE'],'videos'))
         #QtGui.QMessageBox.about(self,'ff','"' + os.path.abspath(os.path.dirname(__file__)) + '\\videos\\' + best.title + '.' + best.extension + '"' )
         if os.path.isfile('c:\progra~1\VideoLAN\VLC\\vlc.exe'):

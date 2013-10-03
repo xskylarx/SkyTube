@@ -13,50 +13,91 @@ from pafy import Pafy
 import os
 import sys
 
+
 try:
-    if len(sys.argv) >= 2:
+    if len(sys.argv) >= 1:
+        u = sys.argv[1]
+        u = str(u).replace('[','')
+        u = str(u).replace(']','')
+        u = str(u).replace("'",'')
 
-        url = sys.argv[1]
-        video_id = url
 
-        if video_id.split('?v=') == 1:
-            video_id = video_id.split('?v=')
+        for i in u.split(','):
+            url = i
+            if len(sys.argv) <= 2:
+                formato = 'mp4'
+            else:
+                formato = sys.argv[2]
 
-        if len(video_id) == 1:
+            video_id = url
 
-            url= 'http://www.youtube.com/watch?v=' + video_id[1]
-        else:
+            if video_id.split('?v=') == 1:
+                video_id = video_id.split('?v=')
 
-            url= 'http://www.youtube.com/watch?v=' + video_id
+            if len(video_id) == 1:
 
-        video =Pafy(url)
-        os.system('cls')
-        print('')
-        print('SkyTube Modo Consola =D ... V1.2')
-        print('')
-        print('')
-        print('Tu video ' + video.title + ' se esta descargando ..')
-        print('')
-        print('')
+                url= 'http://www.youtube.com/watch?v=' + video_id[1]
+            else:
 
-        best = video.getbest(preftype="mp4")
-        titulo = best.title
-        titulo = str(titulo).replace('.','')
-        titulo = str(titulo).replace('"','')
-        titulo = str(titulo).replace(':','')
-        titulo = str(titulo).replace('_','')
-        titulo = str(titulo).replace('-','')
-        titulo = str(titulo).replace(';','')
-        titulo = str(titulo).replace('|','')
-        titulo = str(titulo).replace("'",'')
-        titulo = str(titulo).replace("+",'')
-        titulo = str(titulo).replace("!",'')
-        titulo = str(titulo).replace("/",'')
-        titulo = str(titulo).replace("\\",'')
+                url= 'http://www.youtube.com/watch?v=' + video_id
 
-        filename = os.path.join (os.environ['USERPROFILE'],'videos') + '\\' + titulo + '.' + best.extension
 
-        best.download(quiet=False, filepath=filename)
+
+            video =Pafy(url)
+            os.system('cls')
+            stream = video.getbest(preftype=formato.lower())
+            size = stream.get_filesize()
+
+            print('           _____ _        _____     _')
+            print('          /  ___| |      |_   _|   | |')
+            print('          \  --.| | ___   _| |_   _| |__   ___ ')
+            print("           `--. \ |/ / | | | | | | | |_ \\ / _ \\")
+            print('          /\__/ /   <| |_| | | |_| | |_) |  __/')
+            print('          \____/|_|\_\\__,  \_/\__,_|_.__/ \___|')
+            print('                       __/ |                   ')
+            print('                      |___/                V1.3')
+
+            print(" Tu Video se esta descargando ... \n\n\n '{}' [{:,} Bytes]".format(stream.filename, size))
+            print("-Resolucion %s; Formato: %s" % (stream.resolution, stream.extension))
+            print('\n')
+
+
+
+            titulo = stream.title
+
+            titulo = str(titulo).replace('.','')
+            titulo = str(titulo).replace('"','')
+            titulo = str(titulo).replace(':','')
+            titulo = str(titulo).replace('_','')
+            titulo = str(titulo).replace('-','')
+            titulo = str(titulo).replace(';','')
+            titulo = str(titulo).replace('|','')
+            titulo = str(titulo).replace("'",'')
+            titulo = str(titulo).replace("+",'')
+            titulo = str(titulo).replace("!",'')
+            titulo = str(titulo).replace("/",'')
+            titulo = str(titulo).replace("\\",'')
+            titulo = str(titulo).replace("*",'')
+            titulo = str(titulo).replace("#",'')
+            titulo = str(titulo).replace("%",'')
+            titulo = str(titulo).replace("&",'')
+            titulo = str(titulo).replace("(",'')
+            titulo = str(titulo).replace(")",'')
+            titulo = str(titulo).replace("?",'')
+            titulo = str(titulo).replace("¿",'')
+            titulo = str(titulo).replace("¡",'')
+            titulo = str(titulo).replace("[",'')
+            titulo = str(titulo).replace("]",'')
+            titulo = str(titulo).replace("{",'')
+            titulo = str(titulo).replace("}",'')
+            titulo = str(titulo).replace("=",'')
+            titulo = str(titulo).replace("~",'')
+            titulo = str(titulo).replace("<",'')
+            titulo = str(titulo).replace(">",'')
+
+            filename = os.path.join (os.environ['USERPROFILE'],'videos') + '\\' + titulo + '.' + stream.extension
+
+            stream.download(quiet=False, filepath=filename)
         print('Tu video se Descargo Correctamente, lo encuentras en tu carpeta de Videos .. ')
         print('Esta ventana se cerrara en 5 segundos...')
         os.system('ping -n 5 localhost>nul')
@@ -69,5 +110,15 @@ try:
         os.system('pause>nul')
 
 except Exception as e:
-    print('Url Invalida !' + '    ' + e)
+    print('           _____ _        _____     _')
+    print('          /  ___| |      |_   _|   | |')
+    print('          \  --.| | ___   _| |_   _| |__   ___ ')
+    print("           `--. \ |/ / | | | | | | | |_ \\ / _ \\")
+    print('          /\__/ /   <| |_| | | |_| | |_) |  __/')
+    print('          \____/|_|\_\\__,  \_/\__,_|_.__/ \___|')
+    print('                       __/ |                   ')
+    print('                      |___/                V1.3')
+    print('Hay un Error en la Direccion de Youtube:  \n ' + url + '\n      Por Favor Verifica..')
+    print('')
     os.system('pause>nul')
+    pass

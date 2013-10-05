@@ -1,23 +1,22 @@
 __author__ = 'xskylarx'
-
-
+ #!/usr/bi/python3
+# -*- coding: utf8 -*-
 # Python + PyQt4 By Skylar
 #
 # Creado: 29 - sep - 2013
 #      Por: xskylarx
 # xskyofx@gmail.com
 #V1.2 ->
-# Se añade Directorio de videos, con la cual se puede dar doble clic y abrir el video en VLC.
+# Se agrega Directorio de videos, con la cual se puede dar doble clic y abrir el video en VLC.
 #
 # Por favor si modificas algo haz referencia al autor.
-from pafy import  Pafy # esta es la libreria para leer la informacion
+from pafy import Pafy
 from PyQt4 import QtGui, QtCore
 from inicio import Ui_Form
 import urllib.request
 import os
 import sys
 import subprocess
-import win32clipboard
 import webbrowser
 
 
@@ -56,15 +55,17 @@ class v_skytube(QtGui.QDialog):
         self.connect(self.vskytube.lst_encola, QtCore.SIGNAL('itemDoubleClicked(QListWidgetItem*)'), self.elimina_item)
         self.connect(self.vskytube.btn_de_item, QtCore.SIGNAL('clicked()'), self.elimina_item)
         self.connect(self.vskytube.btn_add_lista, QtCore.SIGNAL('clicked()'), self.valida_descarga)
+
+
         self.setclipboard()
 
 
     def setclipboard(self):
-        win32clipboard.OpenClipboard()
         global data
-        win32clipboard.EmptyClipboard()
-        data = win32clipboard.SetClipboardText('skytube')
-        win32clipboard.CloseClipboard()
+        data = QtGui.QApplication.clipboard()
+        data = data.setText('skylar')
+
+
 
 
 
@@ -142,7 +143,7 @@ class v_skytube(QtGui.QDialog):
             else:
                 self.vskytube.lineEdit.clear()
                 self.setclipboard()
-                QtGui.QMessageBox.about(self,'Alerta Link! ','Este Link ya fue añadido a la lista!' )
+                QtGui.QMessageBox.about(self,'Alerta Link! ','Este Link ya fue agregado a la lista!' )
         except:
              self.vskytube.lineEdit.setText('Link No Valido')
              self.setclipboard()
@@ -151,10 +152,10 @@ class v_skytube(QtGui.QDialog):
 
 
     def clipboard(self):
-        win32clipboard.OpenClipboard()
         global data
-        data = win32clipboard.GetClipboardData()
-        win32clipboard.CloseClipboard()
+        data = QtGui.QApplication.clipboard()
+        data = data.text()
+
 
         if len(data) == 11:
             item = ('http://www.youtube.com/watch?v=' + data)
@@ -214,7 +215,10 @@ class v_skytube(QtGui.QDialog):
             self.vskytube.btn_folder_2.setVisible(True)
             self.vskytube.btn_folder.setText('<')
             self.vskytube.btn_folder.setToolTip('Motrar Videos')
-            self.vskytube.lbl_perfil.setText((os.path.join (os.environ['USERPROFILE'],'videos')))
+            if sys.platform == 'win32':
+                self.vskytube.lbl_perfil.setText((os.path.join (os.environ['USERPROFILE'],'videos')))
+            if sys.platform == 'darwin':
+                self.vskytube.lbl_perfil.setText((os.path.join (os.environ['HOME'],'Movies')))
         else:
             self.resize(579,106)
             self.vskytube.treeView.setVisible(False)
@@ -225,9 +229,15 @@ class v_skytube(QtGui.QDialog):
             self.vskytube.btn_folder.setToolTip('Ocultar Videos')
             self.vskytube.lbl_perfil.setVisible(False)
 
+
+
         fileSystemModel = QtGui.QFileSystemModel(self.vskytube.treeView)
         fileSystemModel.setReadOnly(True)
-        root = fileSystemModel.setRootPath((os.path.join (os.environ['USERPROFILE'],'videos')))
+        if sys.platform == 'win32':
+                root = fileSystemModel.setRootPath((os.path.join (os.environ['USERPROFILE'],'videos')))
+        elif sys.platform == 'darwin':
+            root = fileSystemModel.setRootPath((os.path.join (os.environ['HOME'],'Movies')))
+
         self.vskytube.treeView.setModel(fileSystemModel)
         self.vskytube.treeView.setRootIndex(root)
         self.vskytube.treeView.setColumnHidden(1,True)
@@ -280,18 +290,27 @@ class v_skytube(QtGui.QDialog):
         QtGui.QMessageBox.information(self,'Donacion PayPal','Gracias por conciderar  hacer una donacion al proyecto SkyTube \n Todo el dinero seran utilizado para el Hosting \
                                                              \n Muchas Gracias =)')
         webbrowser.open('https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2K6Y3B8AG39DQ')
+
     def directorio(self, mensaje):
-        if os.path.isfile('c:\progra~1\VideoLAN\VLC\\vlc.exe'):
-            subprocess.Popen('c:\progra~1\VideoLAN\VLC\\vlc.exe "' + str((os.path.join (os.environ['USERPROFILE'],'videos'))) + '\\' +str(mensaje.data()) + '"' )
-        elif os.path.isfile('c:\progra~2\VideoLAN\VLC\\vlc.exe'):
-            subprocess.Popen('c:\progra~2\VideoLAN\VLC\\vlc.exe "' + str((os.path.join (os.environ['USERPROFILE'],'videos'))) + '\\' +str(mensaje.data()) + '"')
-        else:
-            QtGui.QMessageBox.about(self,'\nError VlC','Para poder reproducir los videos desde SkyTube necesitas VLC \n tus videos estan en la  siguiente ruta:\n\n '\
-                                                      + str((os.path.join (os.environ['USERPROFILE'],'videos'))))
+        if sys.platform == 'win32':
+            if os.path.isfile('c:\progra~1\VideoLAN\VLC\\vlc.exe'):
+                subprocess.Popen('c:\progra~1\VideoLAN\VLC\\vlc.exe "' + str((os.path.join (os.environ['USERPROFILE'],'videos'))) + '\\' +str(mensaje.data()) + '"' )
+            elif os.path.isfile('c:\progra~2\VideoLAN\VLC\\vlc.exe'):
+                subprocess.Popen('c:\progra~2\VideoLAN\VLC\\vlc.exe "' + str((os.path.join (os.environ['USERPROFILE'],'videos'))) + '\\' +str(mensaje.data()) + '"')
+            else:
+                QtGui.QMessageBox.about(self,'\nError VlC','Para poder reproducir los videos desde SkyTube necesitas VLC \n tus videos estan en la  siguiente ruta:\n\n '\
+                                                          + str((os.path.join (os.environ['USERPROFILE'],'videos'))))
+        if sys.platform == 'darwin':
+            subprocess.Popen('/Applications/VLC.app/Contents/MacOS/VLC ' + str((os.path.join (os.environ['HOME'],'Movies'))) + '\\' +str(mensaje.data()) + '')
 
     def folder(self):
-        perfil = (os.path.join (os.environ['USERPROFILE'],'videos'))
-        subprocess.Popen('explorer ' + str(perfil))
+        if sys.platform == 'win32':
+            perfil = (os.path.join (os.environ['USERPROFILE'],'videos'))
+            subprocess.Popen('explorer ' + str(perfil))
+        if sys.platform == 'linux2':
+            print('si')
+
+
 
     def descarga(self):
         try:
@@ -373,9 +392,6 @@ class v_skytube(QtGui.QDialog):
         titulo = str(titulo).replace("&",'')
         titulo = str(titulo).replace("(",'')
         titulo = str(titulo).replace(")",'')
-        titulo = str(titulo).replace("?",'')
-        titulo = str(titulo).replace("¿",'')
-        titulo = str(titulo).replace("¡",'')
         titulo = str(titulo).replace("[",'')
         titulo = str(titulo).replace("]",'')
         titulo = str(titulo).replace("{",'')

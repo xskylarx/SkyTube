@@ -57,6 +57,8 @@ class v_skytube(QtGui.QDialog):
         self.connect(self.vskytube.btn_add_lista, QtCore.SIGNAL('clicked()'), self.valida_descarga)
 
 
+
+
         self.setclipboard()
 
 
@@ -229,17 +231,22 @@ class v_skytube(QtGui.QDialog):
             self.vskytube.btn_folder.setToolTip('Ocultar Videos')
             self.vskytube.lbl_perfil.setVisible(False)
 
-
-
+        global fileSystemModel
         fileSystemModel = QtGui.QFileSystemModel(self.vskytube.treeView)
         fileSystemModel.setReadOnly(True)
-        if sys.platform == 'win32':
-                root = fileSystemModel.setRootPath((os.path.join (os.environ['USERPROFILE'],'videos')))
-        elif sys.platform == 'darwin':
-            root = fileSystemModel.setRootPath((os.path.join (os.environ['HOME'],'Movies')))
 
-        self.vskytube.treeView.setModel(fileSystemModel)
-        self.vskytube.treeView.setRootIndex(root)
+        if sys.platform == 'win32':
+            root = fileSystemModel.setRootPath((os.path.join (os.environ['USERPROFILE'],'videos')))
+        elif sys.platform == 'darwin':
+
+
+            fileSystemModel.setRootPath(str((os.path.join (os.environ['HOME'],'Movies'))))
+
+            indexRoot = fileSystemModel.index(fileSystemModel.rootPath())
+
+            self.vskytube.treeView.setModel(fileSystemModel)
+            self.vskytube.treeView.setRootIndex(indexRoot)
+
         self.vskytube.treeView.setColumnHidden(1,True)
         self.vskytube.treeView.setColumnHidden(2,True)
         self.vskytube.treeView.setColumnHidden(3,True)
@@ -291,7 +298,8 @@ class v_skytube(QtGui.QDialog):
                                                              \n Muchas Gracias =)')
         webbrowser.open('https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2K6Y3B8AG39DQ')
 
-    def directorio(self, mensaje):
+    @QtCore.pyqtSlot(QtCore.QModelIndex)
+    def directorio(self, index):
         if sys.platform == 'win32':
             if os.path.isfile('c:\progra~1\VideoLAN\VLC\\vlc.exe'):
                 subprocess.Popen('c:\progra~1\VideoLAN\VLC\\vlc.exe "' + str((os.path.join (os.environ['USERPROFILE'],'videos'))) + '\\' +str(mensaje.data()) + '"' )
@@ -299,16 +307,23 @@ class v_skytube(QtGui.QDialog):
                 subprocess.Popen('c:\progra~2\VideoLAN\VLC\\vlc.exe "' + str((os.path.join (os.environ['USERPROFILE'],'videos'))) + '\\' +str(mensaje.data()) + '"')
             else:
                 QtGui.QMessageBox.about(self,'\nError VlC','Para poder reproducir los videos desde SkyTube necesitas VLC \n tus videos estan en la  siguiente ruta:\n\n '\
-                                                          + str((os.path.join (os.environ['USERPROFILE'],'videos'))))
+                                                           + str((os.path.join (os.environ['USERPROFILE'],'videos'))))
         if sys.platform == 'darwin':
-            subprocess.Popen('/Applications/VLC.app/Contents/MacOS/VLC ' + str((os.path.join (os.environ['HOME'],'Movies'))) + '\\' +str(mensaje.data()) + '')
+            if os.path.isdir('/Applications/VLC.app'):
+                indexItem = fileSystemModel.index(index.row(), 0, index.parent())
+                filePath = fileSystemModel.filePath(indexItem)
+                os.system('open -a /Applications/VLC.app/Contents/MacOS/VLC "' + filePath + '"')
+            else:
+                QtGui.QMessageBox.about(self,'\nError VlC','Para poder reproducir los videos desde SkyTube necesitas VLC \n tus videos estan en la  siguiente ruta:\n\n '\
+                                                           + str((os.path.join (os.environ['HOME'],'Movies'))))
 
     def folder(self):
         if sys.platform == 'win32':
             perfil = (os.path.join (os.environ['USERPROFILE'],'videos'))
             subprocess.Popen('explorer ' + str(perfil))
-        if sys.platform == 'linux2':
-            print('si')
+        if sys.platform == 'darwin':
+            perfil = (os.path.join (os.environ['HOME'],'Movies'))
+            os.system('open ' + str(perfil))
 
 
 

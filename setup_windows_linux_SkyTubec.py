@@ -1,13 +1,8 @@
-__author__ = 'xskylarx'
-# -*- coding: utf-8 -*-
-
-# Python + PyQt4 By Skylar 
-#
-# Creado: 29 - sep - 2013
-#      Por: xskylarx
-# xskyofx@gmail.com
-# Por favor si modificas algo haz referencia al autor.
+__author__ = 'soporte'
+# Let's start with some default (for me) imports...
 import sys
+import os
+import PyQt4
 from cx_Freeze import setup, Executable
 
 
@@ -15,23 +10,27 @@ from cx_Freeze import setup, Executable
 if 'bdist_msi' in sys.argv:
     sys.argv += ['--initial-target-dir', 'C:\DHCP\\']
 
-includes = ['os','pafy','sys']
+includes = []
 excludes = []
 packages = []
 path = []
 include_files = []
+
+if sys.platform == 'win32':
+    base = 'Win32GUI'
+if sys.platform == 'linux' or sys.platform == 'linux2':
+    base = None
 
 skytube = Executable(
     # what to build
     script = "skytubec.py",
     initScript = None,
     base = 'Console',
-    targetName = "skytubec.exe",
     compress = True,
     copyDependentFiles = True,
     appendScriptToExe = True,
     appendScriptToLibrary = True,
-    #icon = '',
+    icon = 'imagenes/logo.ico',
     #shortcutName="DHCP",
     #shortcutDir="ProgramMenuFolder"
     )
@@ -41,7 +40,7 @@ setup(
     version = "0.1",
     description = "SkyTube Descarga Videos de Youtube",
     author = "skylar",
-    name = "SkyTube",
+    name = "SkyTubec",
 
     options = {"build_exe": {"includes": includes,
                  "excludes": excludes,

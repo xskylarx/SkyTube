@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Skytube
+Comment=descarga videos de youtube
+Exec=skytube
+Path= /usr/share/skytube
+Icon=/usr/share/skytube/imagenes/logo.ico
+Terminal=false
+Type=Application
+Encoding=UTF-8
+Categories=AudioVideo;Player;Recorder;

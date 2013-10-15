@@ -418,7 +418,7 @@
     <property name="geometry">
      <rect>
       <x>370</x>
-      <y>137</y>
+      <y>130</y>
       <width>171</width>
       <height>30</height>
      </rect>
@@ -511,10 +511,10 @@
   <widget class="QCheckBox" name="ck_captura">
    <property name="geometry">
     <rect>
-     <x>430</x>
-     <y>81</y>
-     <width>153</width>
-     <height>21</height>
+     <x>440</x>
+     <y>83</y>
+     <width>140</width>
+     <height>20</height>
     </rect>
    </property>
    <property name="toolTip">
@@ -534,10 +534,10 @@
   <widget class="QCheckBox" name="ck_lst_auto">
    <property name="geometry">
     <rect>
-     <x>430</x>
-     <y>61</y>
-     <width>152</width>
-     <height>21</height>
+     <x>440</x>
+     <y>63</y>
+     <width>137</width>
+     <height>20</height>
     </rect>
    </property>
    <property name="toolTip">
@@ -915,10 +915,10 @@
   <widget class="QCheckBox" name="ck_vlc">
    <property name="geometry">
     <rect>
-     <x>430</x>
-     <y>98</y>
-     <width>72</width>
-     <height>25</height>
+     <x>440</x>
+     <y>100</y>
+     <width>58</width>
+     <height>20</height>
     </rect>
    </property>
    <property name="toolTip">

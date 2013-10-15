@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'inicio.ui'
 #
-# Created: Tue Oct  8 20:34:26 2013
-#      by: PyQt4 UI code generator 4.10
+# Created: Wed Oct  9 08:55:18 2013
+#      by: PyQt4 UI code generator 4.10.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -141,7 +141,7 @@ class Ui_Form(object):
         self.lbl_imagen.setScaledContents(True)
         self.lbl_imagen.setObjectName(_fromUtf8("lbl_imagen"))
         self.lbl_calidad = QtGui.QLabel(self.groupBox)
-        self.lbl_calidad.setGeometry(QtCore.QRect(370, 137, 171, 30))
+        self.lbl_calidad.setGeometry(QtCore.QRect(370, 130, 171, 30))
         self.lbl_calidad.setAutoFillBackground(True)
         self.lbl_calidad.setObjectName(_fromUtf8("lbl_calidad"))
         self.btn_folder_2 = QtGui.QPushButton(Form)
@@ -166,14 +166,14 @@ class Ui_Form(object):
         self.btn_add.setFlat(True)
         self.btn_add.setObjectName(_fromUtf8("btn_add"))
         self.ck_captura = QtGui.QCheckBox(Form)
-        self.ck_captura.setGeometry(QtCore.QRect(430, 81, 153, 21))
+        self.ck_captura.setGeometry(QtCore.QRect(440, 83, 140, 20))
         self.ck_captura.setAutoFillBackground(True)
         icon5 = QtGui.QIcon()
         icon5.addPixmap(QtGui.QPixmap(_fromUtf8("imagenes/clipboard.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.ck_captura.setIcon(icon5)
         self.ck_captura.setObjectName(_fromUtf8("ck_captura"))
         self.ck_lst_auto = QtGui.QCheckBox(Form)
-        self.ck_lst_auto.setGeometry(QtCore.QRect(430, 61, 152, 21))
+        self.ck_lst_auto.setGeometry(QtCore.QRect(440, 63, 137, 20))
         self.ck_lst_auto.setAutoFillBackground(True)
         self.ck_lst_auto.setIcon(icon4)
         self.ck_lst_auto.setObjectName(_fromUtf8("ck_lst_auto"))
@@ -289,7 +289,7 @@ class Ui_Form(object):
         self.btn_twitter.setFlat(True)
         self.btn_twitter.setObjectName(_fromUtf8("btn_twitter"))
         self.ck_vlc = QtGui.QCheckBox(Form)
-        self.ck_vlc.setGeometry(QtCore.QRect(430, 98, 72, 25))
+        self.ck_vlc.setGeometry(QtCore.QRect(440, 100, 58, 20))
         self.ck_vlc.setAutoFillBackground(True)
         icon15 = QtGui.QIcon()
         icon15.addPixmap(QtGui.QPixmap(_fromUtf8("imagenes/vlc.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)

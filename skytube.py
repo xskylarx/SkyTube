@@ -18,7 +18,6 @@ from inicio import Ui_Form
 import urllib.request
 import os
 import sys
-import subprocess
 import webbrowser
 
 
@@ -66,13 +65,13 @@ class v_skytube(QtGui.QDialog):
         self.setclipboard()
         self.vlc()
 
-
+# revisado Linux, Windows
     def setclipboard(self):
         global data
         data = QtGui.QApplication.clipboard()
         data = data.setText('skylar')
 
-
+#revisado Linux, Windows
     def elimina_item(self):
         try:
             for index in range(self.vskytube.lst_encola.count()):
@@ -86,6 +85,8 @@ class v_skytube(QtGui.QDialog):
 
         except:
             QtGui.QMessageBox.about(self,'Error Link','No hay Link Que eliminar')
+
+
 
     def descarga_lista(self):
 
@@ -102,16 +103,17 @@ class v_skytube(QtGui.QDialog):
         url = url.replace("'","")
         url = url.replace(" ","")
 
-        if self.sistema() == 'win32':
+        if 'win32' or 'win64' in self.sistema():
             os.system('skytubec.exe ' + url + ' ' + self.formato())
 
-        if self.sistema() == 'darwin':
+        if 'darwin' in self.sistema():
             os.system('skytubec.exe ' + url)
 
-        if self.sistema() == 'linux' or self.sistema() == 'linux2':
+        if 'linux' in self.sistema():
             os.system('xterm -e "skytubec ' + url + ' ' + self.formato() + '"')
 
         QtGui.QMessageBox.about(self,'Descarga Completada', 'La Lista se Descargo Correctamente..')
+        self.vskytube.groupBox.setVisible(False)
 
         self.crea_directorio()
         self.vskytube.lst_encola.clear()
@@ -203,7 +205,6 @@ class v_skytube(QtGui.QDialog):
 
 
     def CapturaClip(self):
-        #QtCore.QTimer.singleShot(3000, self.clipboard)
         if self.vskytube.ck_captura.isChecked():
             global timer
             timer = QtCore.QTimer()
@@ -229,11 +230,11 @@ class v_skytube(QtGui.QDialog):
             self.vskytube.btn_folder_2.setVisible(True)
             self.vskytube.btn_folder.setText('<')
             self.vskytube.btn_folder.setToolTip('Motrar Videos')
-            if sys.platform == 'win32':
+            if 'win32' or 'win64' in self.sistema():
                 self.vskytube.lbl_perfil.setText((os.path.join (os.environ['USERPROFILE'],'videos')))
-            if sys.platform == 'darwin':
+            if 'darwin' in self.sistema():
                 self.vskytube.lbl_perfil.setText((os.path.join (os.environ['HOME'],'Movies')))
-            if sys.platform == 'linux' or sys.platform == 'linux2':
+            if 'linux' in self.sistema():
                 if os.path.isdir(os.path.join (os.environ['HOME'],'Movies')):
                     self.vskytube.lbl_perfil.setText((os.path.join (os.environ['HOME'],'Movies')))
                 else:
@@ -254,9 +255,12 @@ class v_skytube(QtGui.QDialog):
         fileSystemModel = QtGui.QFileSystemModel(self.vskytube.treeView)
         fileSystemModel.setReadOnly(True)
 
-        if sys.platform == 'win32':
-            root = fileSystemModel.setRootPath((os.path.join (os.environ['USERPROFILE'],'videos')))
-        elif sys.platform == 'darwin' or sys.platform == 'linux' or sys.platform == 'linux2':
+        if 'win32' or 'win64' in self.sistema():
+            fileSystemModel.setRootPath(str((os.path.join (os.environ['USERPROFILE'],'videos'))))
+            indexRoot = fileSystemModel.index(fileSystemModel.rootPath())
+            self.vskytube.treeView.setModel(fileSystemModel)
+            self.vskytube.treeView.setRootIndex(indexRoot)
+        elif 'darwin' or 'linux' in self.sistema():
             fileSystemModel.setRootPath(str((os.path.join (os.environ['HOME'],'Movies'))))
             indexRoot = fileSystemModel.index(fileSystemModel.rootPath())
             self.vskytube.treeView.setModel(fileSystemModel)
@@ -321,15 +325,12 @@ class v_skytube(QtGui.QDialog):
             self.directorio_vlc(filePath)
             return
 
-        if sys.platform == 'win32':
-            if os.path.isfile('c:\progra~1\VideoLAN\VLC\\vlc.exe'):
-                subprocess.Popen('c:\progra~1\VideoLAN\VLC\\vlc.exe "' + str((os.path.join (os.environ['USERPROFILE'],'videos'))) + '\\' +str(mensaje.data()) + '"' )
-            elif os.path.isfile('c:\progra~2\VideoLAN\VLC\\vlc.exe'):
-                subprocess.Popen('c:\progra~2\VideoLAN\VLC\\vlc.exe "' + str((os.path.join (os.environ['USERPROFILE'],'videos'))) + '\\' +str(mensaje.data()) + '"')
-            else:
-                QtGui.QMessageBox.about(self,'\nError VlC','Para poder reproducir los videos desde SkyTube necesitas VLC \n tus videos estan en la  siguiente ruta:\n\n '\
-                                                           + str((os.path.join (os.environ['USERPROFILE'],'videos'))))
-        if sys.platform == 'darwin':
+        if 'win32' or 'win64' in self.sistema():
+            indexItem = fileSystemModel.index(index.row(), 0, index.parent())
+            filePath = fileSystemModel.filePath(indexItem)
+            os.startfile(filePath)
+
+        if 'darwin' in self.sistema():
             if os.path.isdir('/Applications/VLC.app'):
                 indexItem = fileSystemModel.index(index.row(), 0, index.parent())
                 filePath = fileSystemModel.filePath(indexItem)
@@ -338,25 +339,28 @@ class v_skytube(QtGui.QDialog):
                 QtGui.QMessageBox.about(self,'\nError VlC','Para poder reproducir los videos desde SkyTube necesitas VLC \n tus videos estan en la  siguiente ruta:\n\n '\
                                                            + str((os.path.join (os.environ['HOME'],'Movies'))))
 
-        if sys.platform == 'linux' or sys.platform == 'linux2':
+        if 'linux' in self.sistema():
             indexItem = fileSystemModel.index(index.row(), 0, index.parent())
             filePath = fileSystemModel.filePath(indexItem)
             self.process.start('xdg-open "' + filePath + '"')
 
 
     def directorio_vlc(self, video_vlc):
-        if sys.platform == 'win32':
+        if 'win32' or 'win64' in self.sistema():
+
             if os.path.isfile('c:\progra~1\VideoLAN\VLC\\vlc.exe'):
+                 video_vlc = video_vlc.replace('/', '\\')
                  self.process.start('c:\progra~1\VideoLAN\VLC\\vlc.exe "' + video_vlc + '"')
+
 
             elif os.path.isfile('c:\progra~2\VideoLAN\VLC\\vlc.exe'):
                 self.process.start('c:\progra~2\VideoLAN\VLC\\vlc.exe "' + video_vlc + '"')
 
-        if sys.platform == 'darwin':
+        if 'darwin' in self.sistema():
             if os.path.isdir('/Applications/VLC.app'):
                 self.process.start('open -a /Applications/VLC.app/Contents/MacOS/VLC "' + video_vlc + '"')
 
-        if sys.platform == 'linux' or sys.platform == 'linux2':
+        if 'linux' in self.sistema():
             self.process.start('vlc "' + video_vlc + '"')
 
     def vlc(self):
@@ -393,13 +397,13 @@ class v_skytube(QtGui.QDialog):
 
 
     def folder(self):
-        if sys.platform == 'win32':
+        if 'win32' or 'win64' in self.sistema():
             perfil = (os.path.join (os.environ['USERPROFILE'],'videos'))
-            subprocess.Popen('explorer ' + str(perfil))
-        if sys.platform == 'darwin':
+            self.process.start('explorer ' + str(perfil))
+        if 'darwin' in self.sistema():
             perfil = (os.path.join (os.environ['HOME'],'Movies'))
-            os.system('open ' + str(perfil))
-        if self.sistema() == 'linux' or self.sistema() == 'linux2':
+            self.process.start('open ' + str(perfil))
+        if 'linux' in self.sistema():
             perfil = (os.path.join (os.environ['HOME'],'Movies'))
             self.process.start('xdg-open "' + perfil + '"')
 
@@ -408,8 +412,6 @@ class v_skytube(QtGui.QDialog):
 
     def descarga(self):
         try:
-
-
             self.vskytube.lineEdit.setVisible(False)
             self.vskytube.btn_valida.setVisible(False)
             self.vskytube.label_7.setVisible(False)
@@ -428,11 +430,11 @@ class v_skytube(QtGui.QDialog):
             self.resize(489,48)
             QtGui.QMessageBox.about(self,'Empezando Descarga ... ','La descarga puede tardar varios minutos, dependiendo de tu conexion ...')
             global url
-            if self.sistema() == 'win32':
+            if 'win32' or 'win64' in self.sistema():
                 os.system('skytubec.exe ' + url + ' ' + self.formato())
-            if self.sistema() == 'darwin':
+            if 'darwin' in self.sistema():
                 os.system('python3 skytubec.py ' + url + ' ' + self.formato())
-            if self.sistema() == 'linux' or self.sistema() == 'linux2':
+            if 'linux' in self.sistema():
                 os.system('xterm -e "skytubec ' + url + ' ' + self.formato() + '"')
             self.setclipboard()
             self.vskytube.lineEdit.clear()
@@ -515,12 +517,16 @@ class v_skytube(QtGui.QDialog):
             self.vskytube.btn_valida_2.setVisible(False)
 
             url = video.thumb
-            file = ('/tmp/skytube.jpg')
+            if 'win32' or 'win64' in self.sistema():
+                file = ('skytube.jpg')
+            if 'linux' in self.sistema():
+                file = ('/tmp/skytube.jpg')
+
             urllib.request.urlretrieve(url, file)
 
-            if self.sistema() == 'win32':
+            if 'win32' or 'win64' in self.sistema():
                 img = (os.path.dirname(sys.executable) + '\skytube.jpg')
-            elif self.sistema() == 'linux' or self.sistema() == 'linux2':
+            if 'linux' in self.sistema():
                 img = ('/tmp/skytube.jpg')
 
             self.vskytube.lbl_imagen.setPixmap(QtGui.QPixmap(img))
@@ -582,11 +588,14 @@ class v_skytube(QtGui.QDialog):
 
 
             url_img = video.thumb
-            file = ('/tmp/skytube.jpg')
+            if 'win32' or 'win64' in self.sistema():
+                file = ('skytube.jpg')
+            if 'linux' in self.sistema():
+                file = ('/tmp/skytube.jpg')
             urllib.request.urlretrieve(url_img, file)
-            if self.sistema() == 'win32':
+            if 'win32' or 'win64' in self.sistema():
                 img = (os.path.dirname(sys.executable) + '\skytube.jpg')
-            elif self.sistema() == 'linux' or self.sistema() == 'linux2':
+            if 'linux' in self.sistema():
                 img = ('/tmp/skytube.jpg')
 
 

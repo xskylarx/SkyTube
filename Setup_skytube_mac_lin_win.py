@@ -1,12 +1,5 @@
-__author__ = 'xskylarx'
-# -*- coding: utf-8 -*-
-
-# Python + PyQt4 By Skylar 
-#
-# Creado: 29 - sep - 2013
-#      Por: xskylarx
-# xskyofx@gmail.com
-# Por favor si modificas algo haz referencia al autor.
+__author__ = 'soporte'
+# Let's start with some default (for me) imports...
 import sys
 import os
 import PyQt4
@@ -17,22 +10,26 @@ from cx_Freeze import setup, Executable
 if 'bdist_msi' in sys.argv:
     sys.argv += ['--initial-target-dir', 'C:\DHCP\\']
 
-includes = ["inicio","PyQt4.QtCore","PyQt4.QtGui","os","sys","PyQt4",'requests','pafy']
+includes = ["inicio","PyQt4.QtCore","PyQt4.QtGui","os","sys","PyQt4",'pafy']
 excludes = []
 packages = []
 path = []
 include_files = ['imagenes']
 
+if sys.platform == 'win32':
+    base = 'Win32GUI'
+if sys.platform == 'linux' or sys.platform == 'linux2':
+    base = None
+
 skytube = Executable(
     # what to build
     script = "skytube.py",
     initScript = None,
-    base = 'Win32GUI',
-    targetName = "skytube.exe",
+    base = base,
     compress = True,
     copyDependentFiles = True,
-    appendScriptToExe = False,
-    appendScriptToLibrary = False,
+    appendScriptToExe = True,
+    appendScriptToLibrary = True,
     icon = 'imagenes/logo.ico',
     #shortcutName="DHCP",
     #shortcutDir="ProgramMenuFolder"

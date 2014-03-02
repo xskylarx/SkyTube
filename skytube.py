@@ -6,6 +6,8 @@ __author__ = 'xskylarx'
 # Creado: 29 - sep - 2013
 #      Por: xskylarx
 # xskyofx@gmail.com
+#v1.5 se corrige fallo, el cual no permitia descargar de vevo, se añade formato mp3, se cambia interface y se añade
+#       combo en vez de opciones individuales al escoger el formato a descargar.
 #v1.4 se añade compatibilidad con linux, mac, windows, se agrega funcion para abrir reproductor predeterminado, o vlc
 #v1.3 se añade lista automatica, capturador de enlaces, lista de descarga
 #V1.2 ->
@@ -19,16 +21,19 @@ import urllib.request
 import os
 import sys
 import webbrowser
-
+import urllib.request
+import time
+import subprocess
 
 class v_skytube(QtGui.QDialog):
+
     def __init__(self, parent=None):
         QtGui.QWidget.__init__(self,parent)
         self.vskytube = Ui_Form()
         self.vskytube.setupUi(self)
         self.resize(585,121)
         self.vskytube.label_7.setStyleSheet("color:grey;")
-        self.setWindowTitle('SkyTube Download v.1.4')
+        self.setWindowTitle('SkyTube Download v.1.5')
         self.setMaximumSize(880,321)
         self.setMinimumSize(489,48)
         self.vskytube.groupBox.setVisible(False)
@@ -56,14 +61,88 @@ class v_skytube(QtGui.QDialog):
         self.connect(self.vskytube.btn_google, QtCore.SIGNAL('clicked()'), self.social_google)
         self.connect(self.vskytube.btn_twitter, QtCore.SIGNAL('clicked()'), self.social_twitter)
         self.connect(self.vskytube.btn_facebook, QtCore.SIGNAL('clicked()'), self.social_facebook)
+
         self.vskytube.lineEdit.setPlaceholderText('    Escribe o pega la direccion de tu video y da enter ..')
         self.oculta()
+        self.vskytube.p_bar.setMinimum(0)
         self.process = QtCore.QProcess()
 
 
 
         self.setclipboard()
         self.vlc()
+
+
+    #"#### Funcion proporcionada por Luis Francisco Cesar - Enki Comunidad Python en español.
+    def funcionprogreso(self,bloque, tamano_bloque, tamano_total):
+        velocidad_descarga = 0
+        tiempo_faltante = 0
+        cant_descargada = bloque * tamano_bloque
+        self.vskytube.p_bar.setMinimum(0)
+        self.vskytube.p_bar.setMaximum(tamano_total)
+        cant_descargada = bloque * tamano_bloque
+        cant_descargada_MB = round(((cant_descargada/1024)/1024),2)
+        tamano_total_MB = round(((tamano_total/1024)/1024),2)
+
+        cant_descargada_KB = (cant_descargada/1024)
+        tamano_total_KB = (tamano_total/1024)
+
+        elapsed = time.clock()
+        if elapsed>0:
+            velocidad_descarga=round((cant_descargada_KB/elapsed),2)
+
+        if velocidad_descarga>0:
+            tiempo_faltante=abs(round(((tamano_total_KB - cant_descargada_KB) / velocidad_descarga),1))
+
+
+
+        self.vskytube.lbl_barr.setText(str('\r %s MB / %s MB - %s kbps/s - %s seg' % (cant_descargada_MB, tamano_total_MB,velocidad_descarga,tiempo_faltante)))
+        self.vskytube.lbl_barr.repaint()
+        self.vskytube.p_bar.setValue(cant_descargada)
+        QtCore.QCoreApplication.processEvents()
+
+
+
+
+
+
+# revisado Linux, Windows
+    def formato_combo(self):
+
+
+        self.vskytube.lineEdit.setVisible(False)
+        self.vskytube.btn_valida.setVisible(False)
+        self.vskytube.label_7.setVisible(False)
+        self.vskytube.btn_folder.setVisible(False)
+        self.vskytube.treeView.setVisible(False)
+        self.vskytube.btn_folder_2.setVisible(False)
+        self.vskytube.lbl_perfil.setVisible(False)
+        self.vskytube.groupBox.setVisible(False)
+        self.vskytube.groupBox_2.setVisible(False)
+        self.vskytube.btn_add.setVisible(False)
+        self.vskytube.ck_lst_auto.setVisible(False)
+        self.vskytube.ck_captura.setVisible(False)
+
+        self.vskytube.lbl_barr.setVisible(True)
+        self.vskytube.p_bar.setVisible(True)
+        self.resize(489,82)
+
+
+        self.vskytube.lbl_desc.setStyleSheet("color:red;")
+        self.vskytube.lbl_desc.setText('Descargando ffmpeg.exe .. ')
+        self.vskytube.lbl_desc.setVisible(True)
+        self.vskytube.p_bar.setMinimum(0)
+        desc = 'https://dl.dropboxusercontent.com/s/lxkyob6uypwewrc/ffmpeg.exe?dl=1&token_hash=AAEj_dwaE9372Y7tytJC_3kl0UtVKbH924p6ZjDFmmqf9A'
+        filename = 'ffmpeg.exe'
+        QtCore.QCoreApplication.processEvents()
+        #QtGui.QMessageBox.about(self,'Descarga ..', 'Comenzara la descarga de  FFMPEG ')
+        urllib.request.urlretrieve(desc, filename,reporthook=self.funcionprogreso)
+        QtGui.QMessageBox.about(self,'Descarga ..', 'Finalizo la descarga de  FFMPEG ')
+
+
+
+
+
 
 # revisado Linux, Windows
     def setclipboard(self):
@@ -77,7 +156,8 @@ class v_skytube(QtGui.QDialog):
             for index in range(self.vskytube.lst_encola.count()):
                 if self.vskytube.lst_encola.currentItem().text() == self.vskytube.lst_encola.item(index).text():
 
-                    respuesta = QtGui.QMessageBox.question(self, 'Elimina Link ', 'Estas seguro de Eliminar el Link \n' + self.vskytube.lst_encola.item(index).text() + ' ?', QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
+                    respuesta = QtGui.QMessageBox.question(self, 'Elimina Link ', 'Estas seguro de Eliminar el Link \n'
+                    + self.vskytube.lst_encola.item(index).text() + ' ?', QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
                     if respuesta == QtGui.QMessageBox.Yes:
                         item = self.vskytube.lst_encola.takeItem(index)
                         del item
@@ -87,35 +167,130 @@ class v_skytube(QtGui.QDialog):
             QtGui.QMessageBox.about(self,'Error Link','No hay Link Que eliminar')
 
 
+    def ejecutaExe(self,var_archivo):
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        with (subprocess.Popen(var_archivo, stdout=subprocess.PIPE, startupinfo=startupinfo)):
+            return
+
+
+
 
     def descarga_lista(self):
+        if 'win32' or 'win64' in self.sistema():
+                if self.formato() == 'mp3':
+                    if os.path.isfile('ffmpeg.exe'):
+                        pass
+                    else:
+                        respuesta = QtGui.QMessageBox.question(self, 'Descarga Mp3 ', 'Necesitas ffmpeg  para descargar MP3 \n'
+                                                        'Quieres descargarlo? ', QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
+                        if respuesta == QtGui.QMessageBox.Yes:
+                            self.formato_combo()
+                        else:
+                            return
 
         self.vskytube.ck_captura.setChecked(False)
-        QtGui.QMessageBox.about(self,'Comenzando Descarga','Tu lista empezara a Descargarce, esto va a tardar varios minutos.')
+
         items = []
         for index in range(self.vskytube.lst_encola.count()):
             items.append(self.vskytube.lst_encola.item(index).text())
 
 
         url = str(items)
-        url = url.replace('[','')
-        url = url.replace(']','')
-        url = url.replace("'","")
-        url = url.replace(" ","")
 
-        if 'win32' or 'win64' in self.sistema():
-            os.system('skytubec.exe ' + url + ' ' + self.formato())
+        self.vskytube.lineEdit.setVisible(False)
+        self.vskytube.btn_valida.setVisible(False)
+        self.vskytube.label_7.setVisible(False)
+        self.vskytube.btn_folder.setVisible(False)
+        self.vskytube.treeView.setVisible(False)
+        self.vskytube.btn_folder_2.setVisible(False)
+        self.vskytube.lbl_perfil.setVisible(False)
+        self.vskytube.groupBox.setVisible(False)
+        self.vskytube.groupBox_2.setVisible(False)
+        self.vskytube.btn_add.setVisible(False)
+        self.vskytube.ck_lst_auto.setVisible(False)
+        self.vskytube.ck_captura.setVisible(False)
 
-        if 'darwin' in self.sistema():
-            os.system('skytubec.exe ' + url)
+        self.vskytube.lbl_barr.setVisible(True)
+        self.vskytube.p_bar.setVisible(True)
+        self.resize(489,82)
+        QtCore.QCoreApplication.processEvents()
+        QtGui.QMessageBox.about(self,'Comenzando Descarga','Tu lista empezara a Descargarce, esto va a tardar varios minutos.')
 
-        if 'linux' in self.sistema():
-            os.system('xterm -e "skytubec ' + url + ' ' + self.formato() + '"')
+
+        for i in items:
+            self.vskytube.lbl_desc.setStyleSheet("color:red;")
+            self.vskytube.lbl_desc.setVisible(True)
+            self.vskytube.p_bar.setMinimum(0)
+            video =Pafy(i)
+            if self.formato() == 'mp3':
+                bestaudio = video.getbestaudio()
+                size = bestaudio.get_filesize()
+                titulo = bestaudio.title
+                extension = bestaudio.extension
+                desc = bestaudio.url
+            else:
+                stream = video.getbest(preftype=self.formato())
+                size = stream.get_filesize()
+                titulo = stream.title
+                extension = stream.extension
+                desc = stream.url
+
+            titulo = str(titulo).replace('.','')
+            titulo = str(titulo).replace('"','')
+            titulo = str(titulo).replace(':','')
+            titulo = str(titulo).replace('_','')
+            titulo = str(titulo).replace('-','')
+            titulo = str(titulo).replace(';','')
+            titulo = str(titulo).replace('|','')
+            titulo = str(titulo).replace("'",'')
+            titulo = str(titulo).replace("+",'')
+            titulo = str(titulo).replace("!",'')
+            titulo = str(titulo).replace("/",'')
+            titulo = str(titulo).replace("\\",'')
+            titulo = str(titulo).replace("*",'')
+            titulo = str(titulo).replace("#",'')
+            titulo = str(titulo).replace("%",'')
+            titulo = str(titulo).replace("&",'')
+            titulo = str(titulo).replace("(",'')
+            titulo = str(titulo).replace(")",'')
+            titulo = str(titulo).replace("?",'')
+            titulo = str(titulo).replace("¿",'')
+            titulo = str(titulo).replace("¡",'')
+            titulo = str(titulo).replace("[",'')
+            titulo = str(titulo).replace("]",'')
+            titulo = str(titulo).replace("{",'')
+            titulo = str(titulo).replace("}",'')
+            titulo = str(titulo).replace("=",'')
+            titulo = str(titulo).replace("~",'')
+            titulo = str(titulo).replace("<",'')
+            titulo = str(titulo).replace(">",'')
+
+            if self.sistema() == 'win32':
+
+                filename = os.path.join (os.environ['USERPROFILE'],'videos') + '\\' + titulo + '.' + extension
+            else:
+                filename = os.path.join (os.environ['HOME'],'Movies') + '/' + titulo + '.' + extension
+
+            self.vskytube.lbl_desc.setText('Descargando ...' + titulo )
+            urllib.request.urlretrieve(desc, filename,reporthook=self.funcionprogreso)
+            if self.formato() == 'mp3':
+                if self.sistema() == 'win32':
+                    m4a = os.path.join (os.environ['USERPROFILE'],'videos') + '\\' + titulo + '.' + extension
+                    mp3 = os.path.join (os.environ['USERPROFILE'],'videos') + '\\' + titulo + '.mp3'
+                    self.ejecutaExe('ffmpeg.exe -i \"%s\" -y \"%s\"' % (m4a , mp3))
+                    os.remove(filename)
+                else:
+                    pass
+
 
         QtGui.QMessageBox.about(self,'Descarga Completada', 'La Lista se Descargo Correctamente..')
-        self.vskytube.groupBox.setVisible(False)
-
+        self.setclipboard()
+        self.vskytube.lineEdit.clear()
         self.crea_directorio()
+        self.resize(880,321)
+        QtCore.QCoreApplication.processEvents()
+        self.muestra()
         self.vskytube.lst_encola.clear()
 
 
@@ -310,6 +485,8 @@ class v_skytube(QtGui.QDialog):
         self.vskytube.btn_folder.setToolTip('Ocultar Videos')
         self.vskytube.lbl_perfil.setVisible(False)
         self.vskytube.btn_de_item.setVisible(False)
+        self.vskytube.lbl_barr.setVisible(False)
+        self.vskytube.p_bar.setVisible(False)
 
 
     def donapaypal(self):
@@ -412,6 +589,31 @@ class v_skytube(QtGui.QDialog):
 
     def descarga(self):
         try:
+            self.vskytube.p_bar.setMinimum(0)
+            if 'win32' or 'win64' in self.sistema():
+                if self.formato() == 'mp3':
+                    if os.path.isfile('ffmpeg.exe'):
+                        pass
+                    else:
+                        respuesta = QtGui.QMessageBox.question(self, 'Descarga Mp3 ', 'Necesitas ffmpeg  para descargar MP3 \n'
+                                                        'Quieres descargarlo? ', QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
+                        if respuesta == QtGui.QMessageBox.Yes:
+                            self.formato_combo()
+                        else:
+                            return
+            video =Pafy(url)
+            if self.formato() == 'mp3':
+                bestaudio = video.getbestaudio()
+                size = bestaudio.get_filesize()
+                titulo = bestaudio.title
+                extension = bestaudio.extension
+                desc = bestaudio.url
+            else:
+                stream = video.getbest(preftype=self.formato())
+                size = stream.get_filesize()
+                titulo = stream.title
+                extension = stream.extension
+                desc = stream.url
             self.vskytube.lineEdit.setVisible(False)
             self.vskytube.btn_valida.setVisible(False)
             self.vskytube.label_7.setVisible(False)
@@ -425,23 +627,75 @@ class v_skytube(QtGui.QDialog):
             self.vskytube.ck_lst_auto.setVisible(False)
             self.vskytube.ck_captura.setVisible(False)
             self.vskytube.lbl_desc.setStyleSheet("color:red;")
-            self.vskytube.lbl_desc.setText('Tu video se esta descargado, puede tardar varios minutos ...')
+            self.vskytube.lbl_desc.setText('Descargando ...' + titulo )
             self.vskytube.lbl_desc.setVisible(True)
-            self.resize(489,48)
+            self.vskytube.lbl_barr.setVisible(True)
+            self.vskytube.p_bar.setVisible(True)
+            self.resize(489,82)
             QtGui.QMessageBox.about(self,'Empezando Descarga ... ','La descarga puede tardar varios minutos, dependiendo de tu conexion ...')
-            global url
-            if 'win32' or 'win64' in self.sistema():
-                os.system('skytubec.exe ' + url + ' ' + self.formato())
-            if 'darwin' in self.sistema():
-                os.system('python3 skytubec.py ' + url + ' ' + self.formato())
-            if 'linux' in self.sistema():
-                os.system('xterm -e "skytubec ' + url + ' ' + self.formato() + '"')
+
+
+
+            titulo = str(titulo).replace('.','')
+            titulo = str(titulo).replace('"','')
+            titulo = str(titulo).replace(':','')
+            titulo = str(titulo).replace('_','')
+            titulo = str(titulo).replace('-','')
+            titulo = str(titulo).replace(';','')
+            titulo = str(titulo).replace('|','')
+            titulo = str(titulo).replace("'",'')
+            titulo = str(titulo).replace("+",'')
+            titulo = str(titulo).replace("!",'')
+            titulo = str(titulo).replace("/",'')
+            titulo = str(titulo).replace("\\",'')
+            titulo = str(titulo).replace("*",'')
+            titulo = str(titulo).replace("#",'')
+            titulo = str(titulo).replace("%",'')
+            titulo = str(titulo).replace("&",'')
+            titulo = str(titulo).replace("(",'')
+            titulo = str(titulo).replace(")",'')
+            titulo = str(titulo).replace("?",'')
+            titulo = str(titulo).replace("¿",'')
+            titulo = str(titulo).replace("¡",'')
+            titulo = str(titulo).replace("[",'')
+            titulo = str(titulo).replace("]",'')
+            titulo = str(titulo).replace("{",'')
+            titulo = str(titulo).replace("}",'')
+            titulo = str(titulo).replace("=",'')
+            titulo = str(titulo).replace("~",'')
+            titulo = str(titulo).replace("<",'')
+            titulo = str(titulo).replace(">",'')
+
+            if self.sistema() == 'win32':
+
+                filename = os.path.join (os.environ['USERPROFILE'],'videos') + '\\' + titulo + '.' + extension
+            else:
+                filename = os.path.join (os.environ['HOME'],'Movies') + '/' + titulo + '.' + extension
+
+
+            urllib.request.urlretrieve(desc, filename,reporthook=self.funcionprogreso)
+
+            if self.formato() == 'mp3':
+                if self.sistema() == 'win32':
+                    m4a = os.path.join (os.environ['USERPROFILE'],'videos') + '\\' + titulo + '.' + extension
+                    mp3 = os.path.join (os.environ['USERPROFILE'],'videos') + '\\' + titulo + '.mp3'
+
+                    self.ejecutaExe('ffmpeg.exe -i \"%s\" -y \"%s\"' % (m4a , mp3))
+                    os.remove(filename)
+
+
+                else:
+                    pass
             self.setclipboard()
             self.vskytube.lineEdit.clear()
             QtGui.QMessageBox.about(self,'Descarga Finalizada', ' Tu descarga Finalizo')
             self.crea_directorio()
             self.resize(880,321)
+            QtCore.QCoreApplication.processEvents()
             self.muestra()
+
+
+
         except Exception as e:
             QtGui.QMessageBox.about(self,'Error Descarga', str(e))
 
@@ -450,6 +704,7 @@ class v_skytube(QtGui.QDialog):
         return sys.platform
 
     def muestra(self):
+        QtCore.QCoreApplication.processEvents()
         self.vskytube.lineEdit.setVisible(True)
         self.vskytube.btn_valida.setVisible(True)
         self.vskytube.label_7.setVisible(True)
@@ -460,22 +715,14 @@ class v_skytube(QtGui.QDialog):
         self.vskytube.ck_captura.setVisible(True)
         self.vskytube.lbl_desc.setVisible(False)
         self.vskytube.groupBox.setVisible(False)
+        self.vskytube.lbl_barr.setVisible(False)
+        self.vskytube.p_bar.setVisible(False)
         self.vskytube.lineEdit.clear()
 
 
     def formato(self):
-
-        if self.vskytube.r_3gp.isChecked():
-            return '3gp'
-
-        if self.vskytube.r_flv.isChecked():
-            return 'flv'
-
-        if self.vskytube.r_webm.isChecked():
-           return 'webm'
-
-        if self.vskytube.r_mp4.isChecked():
-            return 'mp4'
+        formato = self.vskytube.f_box.currentText()
+        return formato
 
 
     def valida_descarga(self):
@@ -506,7 +753,10 @@ class v_skytube(QtGui.QDialog):
 
             video = Pafy(url)
             best = video.getbest(preftype=self.formato())
-            self.vskytube.lbl_calidad.setText(best.resolution + ' Extencion: ' + best.extension)
+            if self.formato() == 'mp3':
+                self.vskytube.lbl_calidad.setText(' Extencion: mp3')
+            else:
+                self.vskytube.lbl_calidad.setText(best.resolution + ' Extencion: ' + best.extension)
 
             self.vskytube.groupBox.setTitle(video.title)
             self.vskytube.lbl_autor.setText(video.author)
@@ -574,7 +824,11 @@ class v_skytube(QtGui.QDialog):
 
             video = Pafy(url)
             best = video.getbest(preftype=self.formato())
-            self.vskytube.lbl_calidad.setText(best.resolution + ' Extencion: ' + best.extension)
+
+            if self.formato() == 'mp3':
+                self.vskytube.lbl_calidad.setText(' Extencion: mp3')
+            else:
+                self.vskytube.lbl_calidad.setText(best.resolution + ' Extencion: ' + best.extension)
 
             self.vskytube.groupBox.setTitle(video.title)
             self.vskytube.lbl_autor.setText(video.author)

@@ -678,100 +678,66 @@
      <string>Formato:</string>
     </property>
    </widget>
-   <widget class="QRadioButton" name="r_mp4">
+   <widget class="QComboBox" name="f_box">
     <property name="geometry">
      <rect>
-      <x>90</x>
-      <y>8</y>
-      <width>77</width>
-      <height>21</height>
+      <x>97</x>
+      <y>5</y>
+      <width>91</width>
+      <height>22</height>
      </rect>
     </property>
     <property name="toolTip">
-     <string>Formato MP4</string>
+     <string>Formato</string>
     </property>
     <property name="autoFillBackground">
      <bool>true</bool>
     </property>
-    <property name="text">
-     <string>mp4</string>
-    </property>
-    <property name="icon">
-     <iconset>
-      <normaloff>imagenes/mp4.png</normaloff>imagenes/mp4.png</iconset>
-    </property>
-    <property name="checked">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="r_3gp">
-    <property name="geometry">
-     <rect>
-      <x>170</x>
-      <y>8</y>
-      <width>75</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>Formato 3GP</string>
-    </property>
-    <property name="autoFillBackground">
-     <bool>true</bool>
-    </property>
-    <property name="text">
-     <string>3gp</string>
-    </property>
-    <property name="icon">
-     <iconset>
-      <normaloff>imagenes/3gp.png</normaloff>imagenes/3gp.png</iconset>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="r_webm">
-    <property name="geometry">
-     <rect>
-      <x>250</x>
-      <y>8</y>
-      <width>89</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>Formato WEBM</string>
-    </property>
-    <property name="autoFillBackground">
-     <bool>true</bool>
-    </property>
-    <property name="text">
-     <string>webm</string>
-    </property>
-    <property name="icon">
-     <iconset>
-      <normaloff>imagenes/webm.png</normaloff>imagenes/webm.png</iconset>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="r_flv">
-    <property name="geometry">
-     <rect>
-      <x>340</x>
-      <y>8</y>
-      <width>67</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>Formato FLV</string>
-    </property>
-    <property name="autoFillBackground">
-     <bool>true</bool>
-    </property>
-    <property name="text">
-     <string>flv</string>
-    </property>
-    <property name="icon">
-     <iconset>
-      <normaloff>imagenes/flv.png</normaloff>imagenes/flv.png</iconset>
-    </property>
+    <item>
+     <property name="text">
+      <string>mp4</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>imagenes/mp4.png</normaloff>imagenes/mp4.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>mp3</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>imagenes/mp3.png</normaloff>imagenes/mp3.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>3gp</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>imagenes/3gp.png</normaloff>imagenes/3gp.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>webm</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>imagenes/webm.png</normaloff>imagenes/webm.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>flv</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>imagenes/flv.png</normaloff>imagenes/flv.png</iconset>
+     </property>
+    </item>
    </widget>
   </widget>
   <widget class="QPushButton" name="btn_de_item">
@@ -972,6 +938,39 @@
     <bool>true</bool>
    </property>
   </widget>
+  <widget class="QLabel" name="lbl_barr">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>60</y>
+     <width>351</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>-----</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QProgressBar" name="p_bar">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>40</y>
+     <width>451</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="value">
+    <number>0</number>
+   </property>
+  </widget>
+  <zorder>lbl_barr</zorder>
   <zorder>lbl_desc</zorder>
   <zorder>btn_valida</zorder>
   <zorder>lineEdit</zorder>
@@ -997,6 +996,7 @@
   <zorder>btn_twitter</zorder>
   <zorder>ck_vlc</zorder>
   <zorder>label_8</zorder>
+  <zorder>p_bar</zorder>
  </widget>
  <resources/>
  <connections/>

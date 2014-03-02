@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "SkyTube"
-#define MyAppVersion "1.2"
+#define MyAppVersion "1.5"
 #define MyAppPublisher "SkyOfLies"
 #define MyAppURL "http://www.twitter.com/xskylarx"
 #define MyAppExeName "skytube.exe"

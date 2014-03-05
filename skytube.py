@@ -129,11 +129,16 @@ class v_skytube(QtGui.QDialog):
 
 
         self.vskytube.lbl_desc.setStyleSheet("color:red;")
-        self.vskytube.lbl_desc.setText('Descargando ffmpeg.exe .. ')
+        self.vskytube.lbl_desc.setText('Descargando ffmpeg  ... ')
         self.vskytube.lbl_desc.setVisible(True)
         self.vskytube.p_bar.setMinimum(0)
-        desc = 'https://dl.dropboxusercontent.com/s/lxkyob6uypwewrc/ffmpeg.exe?dl=1&token_hash=AAEj_dwaE9372Y7tytJC_3kl0UtVKbH924p6ZjDFmmqf9A'
-        filename = 'ffmpeg.exe'
+        if 'win32' in self.sistema() or 'win64' in self.sistema():
+            desc = 'https://dl.dropboxusercontent.com/s/lxkyob6uypwewrc/ffmpeg.exe?dl=1&token_hash=AAEj_dwaE9372Y7tytJC_3kl0UtVKbH924p6ZjDFmmqf9A'
+            filename = 'ffmpeg.exe'
+        if 'darwin' in self.sistema():
+            desc = 'https://dl.dropboxusercontent.com/s/ux463io3iyybh74/ffmpeg?dl=1&token_hash=AAHE6cs1LXreRN_mspjpLA_w7oaucYFUKeqxFJXZL8rh0Q'
+            filename = 'ffmpeg'
+
         QtCore.QCoreApplication.processEvents()
         #QtGui.QMessageBox.about(self,'Descarga ..', 'Comenzara la descarga de  FFMPEG ')
         urllib.request.urlretrieve(desc, filename,reporthook=self.funcionprogreso)
@@ -168,18 +173,34 @@ class v_skytube(QtGui.QDialog):
 
 
     def ejecutaExe(self,var_archivo):
-        startupinfo = subprocess.STARTUPINFO()
-        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-        with (subprocess.Popen(var_archivo, stdout=subprocess.PIPE, startupinfo=startupinfo)):
-            return
+        if 'win32' in self.sistema() or 'win64' in self.sistema():
+            startupinfo = subprocess.STARTUPINFO()
+            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            with (subprocess.Popen(var_archivo, stdout=subprocess.PIPE, startupinfo=startupinfo)):
+                return
+        else:
+            os.system('chmod +x ffmpeg')
+            output = subprocess.check_output(var_archivo, shell=True)
 
 
 
 
     def descarga_lista(self):
-        if 'win32' or 'win64' in self.sistema():
+        if 'win32' in self.sistema() or 'win64' in self.sistema():
                 if self.formato() == 'mp3':
                     if os.path.isfile('ffmpeg.exe'):
+                        pass
+                    else:
+                        respuesta = QtGui.QMessageBox.question(self, 'Descarga Mp3 ', 'Necesitas ffmpeg  para descargar MP3 \n'
+                                                        'Quieres descargarlo? ', QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
+                        if respuesta == QtGui.QMessageBox.Yes:
+                            self.formato_combo()
+                        else:
+                            return
+
+        if 'darwin' in self.sistema():
+                if self.formato() == 'mp3':
+                    if os.path.isfile('ffmpeg'):
                         pass
                     else:
                         respuesta = QtGui.QMessageBox.question(self, 'Descarga Mp3 ', 'Necesitas ffmpeg  para descargar MP3 \n'
@@ -266,7 +287,7 @@ class v_skytube(QtGui.QDialog):
             titulo = str(titulo).replace("<",'')
             titulo = str(titulo).replace(">",'')
 
-            if self.sistema() == 'win32':
+            if 'win32' in self.sistema() or 'win64' in self.sistema():
 
                 filename = os.path.join (os.environ['USERPROFILE'],'videos') + '\\' + titulo + '.' + extension
             else:
@@ -280,8 +301,12 @@ class v_skytube(QtGui.QDialog):
                     mp3 = os.path.join (os.environ['USERPROFILE'],'videos') + '\\' + titulo + '.mp3'
                     self.ejecutaExe('ffmpeg.exe -i \"%s\" -y \"%s\"' % (m4a , mp3))
                     os.remove(filename)
-                else:
-                    pass
+                if 'darwin' in self.sistema():
+                    m4a = os.path.join (os.environ['HOME'],'Movies') + '/' + titulo + '.' + extension
+                    mp3 = os.path.join (os.environ['HOME'],'Movies') + '/' + titulo + '.mp3'
+                    self.ejecutaExe('./ffmpeg -i \"%s\" -y \"%s\"' % (m4a , mp3))
+                    os.remove(filename)
+
 
 
         QtGui.QMessageBox.about(self,'Descarga Completada', 'La Lista se Descargo Correctamente..')
@@ -405,7 +430,7 @@ class v_skytube(QtGui.QDialog):
             self.vskytube.btn_folder_2.setVisible(True)
             self.vskytube.btn_folder.setText('<')
             self.vskytube.btn_folder.setToolTip('Motrar Videos')
-            if 'win32' or 'win64' in self.sistema():
+            if 'win32' in self.sistema() or 'win64' in self.sistema():
                 self.vskytube.lbl_perfil.setText((os.path.join (os.environ['USERPROFILE'],'videos')))
             if 'darwin' in self.sistema():
                 self.vskytube.lbl_perfil.setText((os.path.join (os.environ['HOME'],'Movies')))
@@ -430,12 +455,12 @@ class v_skytube(QtGui.QDialog):
         fileSystemModel = QtGui.QFileSystemModel(self.vskytube.treeView)
         fileSystemModel.setReadOnly(True)
 
-        if 'win32' or 'win64' in self.sistema():
+        if 'win32' in self.sistema() or 'win64' in self.sistema():
             fileSystemModel.setRootPath(str((os.path.join (os.environ['USERPROFILE'],'videos'))))
             indexRoot = fileSystemModel.index(fileSystemModel.rootPath())
             self.vskytube.treeView.setModel(fileSystemModel)
             self.vskytube.treeView.setRootIndex(indexRoot)
-        elif 'darwin' or 'linux' in self.sistema():
+        elif 'darwin' in self.sistema() or 'linux' in self.sistema():
             fileSystemModel.setRootPath(str((os.path.join (os.environ['HOME'],'Movies'))))
             indexRoot = fileSystemModel.index(fileSystemModel.rootPath())
             self.vskytube.treeView.setModel(fileSystemModel)
@@ -502,7 +527,7 @@ class v_skytube(QtGui.QDialog):
             self.directorio_vlc(filePath)
             return
 
-        if 'win32' or 'win64' in self.sistema():
+        if 'win32' in self.sistema() or 'win64' in self.sistema():
             indexItem = fileSystemModel.index(index.row(), 0, index.parent())
             filePath = fileSystemModel.filePath(indexItem)
             os.startfile(filePath)
@@ -523,7 +548,7 @@ class v_skytube(QtGui.QDialog):
 
 
     def directorio_vlc(self, video_vlc):
-        if 'win32' or 'win64' in self.sistema():
+        if 'win32' in self.sistema() or 'win64' in self.sistema():
 
             if os.path.isfile('c:\progra~1\VideoLAN\VLC\\vlc.exe'):
                  video_vlc = video_vlc.replace('/', '\\')
@@ -574,7 +599,7 @@ class v_skytube(QtGui.QDialog):
 
 
     def folder(self):
-        if 'win32' or 'win64' in self.sistema():
+        if 'win32' in self.sistema() or 'win64' in self.sistema():
             perfil = (os.path.join (os.environ['USERPROFILE'],'videos'))
             self.process.start('explorer ' + str(perfil))
         if 'darwin' in self.sistema():
@@ -590,9 +615,21 @@ class v_skytube(QtGui.QDialog):
     def descarga(self):
         try:
             self.vskytube.p_bar.setMinimum(0)
-            if 'win32' or 'win64' in self.sistema():
+            if 'win32' in self.sistema() or 'win64' in self.sistema():
                 if self.formato() == 'mp3':
                     if os.path.isfile('ffmpeg.exe'):
+                        pass
+                    else:
+                        respuesta = QtGui.QMessageBox.question(self, 'Descarga Mp3 ', 'Necesitas ffmpeg  para descargar MP3 \n'
+                                                        'Quieres descargarlo? ', QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
+                        if respuesta == QtGui.QMessageBox.Yes:
+                            self.formato_combo()
+                        else:
+                            return
+
+            if 'darwin' in self.sistema():
+                if self.formato() == 'mp3':
+                    if os.path.isfile('ffmpeg'):
                         pass
                     else:
                         respuesta = QtGui.QMessageBox.question(self, 'Descarga Mp3 ', 'Necesitas ffmpeg  para descargar MP3 \n'
@@ -666,7 +703,7 @@ class v_skytube(QtGui.QDialog):
             titulo = str(titulo).replace("<",'')
             titulo = str(titulo).replace(">",'')
 
-            if self.sistema() == 'win32':
+            if 'win32' in self.sistema() or 'win64' in self.sistema():
 
                 filename = os.path.join (os.environ['USERPROFILE'],'videos') + '\\' + titulo + '.' + extension
             else:
@@ -676,16 +713,21 @@ class v_skytube(QtGui.QDialog):
             urllib.request.urlretrieve(desc, filename,reporthook=self.funcionprogreso)
 
             if self.formato() == 'mp3':
-                if self.sistema() == 'win32':
+                if 'win32' in self.sistema() or 'win64' in self.sistema():
                     m4a = os.path.join (os.environ['USERPROFILE'],'videos') + '\\' + titulo + '.' + extension
                     mp3 = os.path.join (os.environ['USERPROFILE'],'videos') + '\\' + titulo + '.mp3'
 
+
                     self.ejecutaExe('ffmpeg.exe -i \"%s\" -y \"%s\"' % (m4a , mp3))
+                    os.remove(filename)
+                if 'darwin' in self.sistema():
+                    m4a = os.path.join (os.environ['HOME'],'Movies') + '/' + titulo + '.' + extension
+                    mp3 = os.path.join (os.environ['HOME'],'Movies') + '/' + titulo + '.mp3'
+
+                    self.ejecutaExe('./ffmpeg -i \"%s\" -y \"%s\"' % (m4a , mp3))
                     os.remove(filename)
 
 
-                else:
-                    pass
             self.setclipboard()
             self.vskytube.lineEdit.clear()
             QtGui.QMessageBox.about(self,'Descarga Finalizada', ' Tu descarga Finalizo')
@@ -767,17 +809,21 @@ class v_skytube(QtGui.QDialog):
             self.vskytube.btn_valida_2.setVisible(False)
 
             url = video.thumb
-            if 'win32' or 'win64' in self.sistema():
+            if 'win32' in self.sistema() or 'win64' in self.sistema():
                 file = ('skytube.jpg')
             if 'linux' in self.sistema():
                 file = ('/tmp/skytube.jpg')
+            if 'darwin' in self.sistema():
+                file = ('skytube.jpg')
 
             urllib.request.urlretrieve(url, file)
 
-            if 'win32' or 'win64' in self.sistema():
+            if 'win32' in self.sistema() or 'win64' in self.sistema():
                 img = (os.path.dirname(sys.executable) + '\skytube.jpg')
             if 'linux' in self.sistema():
                 img = ('/tmp/skytube.jpg')
+            if 'darwin' in self.sistema():
+                img = ('/skytube.jpg')
 
             self.vskytube.lbl_imagen.setPixmap(QtGui.QPixmap(img))
             self.vskytube.groupBox.setVisible(True)
@@ -842,15 +888,19 @@ class v_skytube(QtGui.QDialog):
 
 
             url_img = video.thumb
-            if 'win32' or 'win64' in self.sistema():
+            if 'win32' in self.sistema() or 'win64' in self.sistema():
                 file = ('skytube.jpg')
             if 'linux' in self.sistema():
                 file = ('/tmp/skytube.jpg')
+            if 'darwin' in self.sistema():
+                file = ('skytube.jpg')
             urllib.request.urlretrieve(url_img, file)
-            if 'win32' or 'win64' in self.sistema():
+            if 'win32' in self.sistema() or 'win64' in self.sistema():
                 img = (os.path.dirname(sys.executable) + '\skytube.jpg')
             if 'linux' in self.sistema():
                 img = ('/tmp/skytube.jpg')
+            if 'darwin' in self.sistema():
+                img = ('/skytube.jpg')
 
 
             self.vskytube.lbl_imagen.setPixmap(QtGui.QPixmap(img))
@@ -860,6 +910,7 @@ class v_skytube(QtGui.QDialog):
 
 def main():
     app = QtGui.QApplication(sys.argv)
+    QtGui.QImageReader.supportedImageFormats()
     vskytube = v_skytube()
     vskytube.show()
     sys.exit(app.exec_())

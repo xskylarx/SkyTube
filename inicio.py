@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'inicio.ui'
 #
-# Created: Sun Mar  2 10:03:07 2014
+# Created: Sun Mar  2 23:49:14 2014
 #      by: PyQt4 UI code generator 4.10.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -43,7 +43,7 @@ class Ui_Form(object):
         self.btn_valida.setFlat(True)
         self.btn_valida.setObjectName(_fromUtf8("btn_valida"))
         self.lineEdit = QtGui.QLineEdit(Form)
-        self.lineEdit.setGeometry(QtCore.QRect(20, 20, 461, 20))
+        self.lineEdit.setGeometry(QtCore.QRect(20, 19, 461, 20))
         self.lineEdit.setAutoFillBackground(True)
         self.lineEdit.setObjectName(_fromUtf8("lineEdit"))
         self.line = QtGui.QFrame(Form)
@@ -58,7 +58,7 @@ class Ui_Form(object):
         self.label_7.setStyleSheet(_fromUtf8(""))
         self.label_7.setObjectName(_fromUtf8("label_7"))
         self.lbl_desc = QtGui.QLabel(Form)
-        self.lbl_desc.setGeometry(QtCore.QRect(40, 20, 441, 20))
+        self.lbl_desc.setGeometry(QtCore.QRect(20, 20, 461, 20))
         self.lbl_desc.setAutoFillBackground(True)
         self.lbl_desc.setObjectName(_fromUtf8("lbl_desc"))
         self.btn_folder = QtGui.QPushButton(Form)
@@ -141,7 +141,7 @@ class Ui_Form(object):
         self.lbl_imagen.setScaledContents(True)
         self.lbl_imagen.setObjectName(_fromUtf8("lbl_imagen"))
         self.lbl_calidad = QtGui.QLabel(self.groupBox)
-        self.lbl_calidad.setGeometry(QtCore.QRect(370, 130, 171, 30))
+        self.lbl_calidad.setGeometry(QtCore.QRect(370, 130, 171, 21))
         self.lbl_calidad.setAutoFillBackground(True)
         self.lbl_calidad.setObjectName(_fromUtf8("lbl_calidad"))
         self.btn_folder_2 = QtGui.QPushButton(Form)
@@ -300,7 +300,7 @@ class Ui_Form(object):
         self.lbl_barr.setAlignment(QtCore.Qt.AlignCenter)
         self.lbl_barr.setObjectName(_fromUtf8("lbl_barr"))
         self.p_bar = QtGui.QProgressBar(Form)
-        self.p_bar.setGeometry(QtCore.QRect(40, 40, 451, 23))
+        self.p_bar.setGeometry(QtCore.QRect(40, 40, 401, 23))
         self.p_bar.setProperty("value", 0)
         self.p_bar.setObjectName(_fromUtf8("p_bar"))
 

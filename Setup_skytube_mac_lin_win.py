@@ -20,7 +20,8 @@ if sys.platform == 'win32':
     base = 'Win32GUI'
 if sys.platform == 'linux' or sys.platform == 'linux2':
     base = None
-
+if sys.platform == 'darwin':
+    base = None
 skytube = Executable(
     # what to build
     script = "skytube.py",
@@ -30,7 +31,7 @@ skytube = Executable(
     copyDependentFiles = True,
     appendScriptToExe = True,
     appendScriptToLibrary = True,
-    icon = 'imagenes/logo.ico',
+    #icon = 'imagenes/logo.icns',
     #shortcutName="DHCP",
     #shortcutDir="ProgramMenuFolder"
     )

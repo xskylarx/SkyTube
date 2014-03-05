@@ -55,7 +55,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>20</y>
+     <y>19</y>
      <width>461</width>
      <height>20</height>
     </rect>
@@ -102,9 +102,9 @@
   <widget class="QLabel" name="lbl_desc">
    <property name="geometry">
     <rect>
-     <x>40</x>
+     <x>20</x>
      <y>20</y>
-     <width>441</width>
+     <width>461</width>
      <height>20</height>
     </rect>
    </property>
@@ -420,7 +420,7 @@
       <x>370</x>
       <y>130</y>
       <width>171</width>
-      <height>30</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="autoFillBackground">
@@ -962,7 +962,7 @@
     <rect>
      <x>40</x>
      <y>40</y>
-     <width>451</width>
+     <width>401</width>
      <height>23</height>
     </rect>
    </property>

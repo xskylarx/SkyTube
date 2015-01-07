@@ -6,6 +6,9 @@ __author__ = 'xskylarx'
 # Creado: 29 - sep - 2013
 #      Por: xskylarx
 # xskyofx@gmail.com
+# Version 2.0-  se añade compatibilidad con listas de reproduccion, se pueden escoger que videos descargar de
+#       dicha lista, se añade reproductor nativo en la aplicacion para ver el video en vez de una imagen previa
+#       se actualiza plugin para descargar videos de VEVO
 #v1.5 se corrige fallo, el cual no permitia descargar de vevo, se añade formato mp3, se cambia interface y se añade
 #       combo en vez de opciones individuales al escoger el formato a descargar.
 #v1.4 se añade compatibilidad con linux, mac, windows, se agrega funcion para abrir reproductor predeterminado, o vlc
@@ -14,7 +17,8 @@ __author__ = 'xskylarx'
 # Se agrega Directorio de videos, con la cual se puede dar doble clic y abrir el video en VLC.
 #
 # Por favor si modificas algo haz referencia al autor.
-from pafy import Pafy
+
+import pafy
 from PyQt4 import QtGui, QtCore
 from inicio import Ui_Form
 import urllib.request
@@ -31,12 +35,12 @@ class v_skytube(QtGui.QDialog):
         QtGui.QWidget.__init__(self,parent)
         self.vskytube = Ui_Form()
         self.vskytube.setupUi(self)
-        self.resize(585,121)
+        self.resize(585,480)
         self.vskytube.label_7.setStyleSheet("color:grey;")
-        self.setWindowTitle('SkyTube Download v.1.5')
-        self.setMaximumSize(880,321)
+        self.setWindowTitle('SkyTube Download v.2.1')
+        self.setMaximumSize(880,480)
         self.setMinimumSize(489,48)
-        self.vskytube.groupBox.setVisible(False)
+        #self.vskytube.groupBox.setVisible(False)
         self.connect(self.vskytube.btn_valida_2,QtCore.SIGNAL('clicked()'), self.descarga)
         self.connect(self.vskytube.btn_valida,QtCore.SIGNAL('clicked()'), self.valida)
         self.vskytube.lbl_desc.setVisible(False)
@@ -61,6 +65,13 @@ class v_skytube(QtGui.QDialog):
         self.connect(self.vskytube.btn_google, QtCore.SIGNAL('clicked()'), self.social_google)
         self.connect(self.vskytube.btn_twitter, QtCore.SIGNAL('clicked()'), self.social_twitter)
         self.connect(self.vskytube.btn_facebook, QtCore.SIGNAL('clicked()'), self.social_facebook)
+        self.vskytube.web.showFullScreen()
+        #self.web.mainFrame().setScrollBarPolicy(Qt.Vertical, Qt.ScrollBarAlwaysOff)
+        self.vskytube.web.setHtml('''
+
+            <body bgcolor="#000000"></body>
+            <center> <h1> <font face="Comic Sans MS,arial,verdana" color="white"> Bienvenido a Skytube 2.1
+             ''')
 
         self.vskytube.lineEdit.setPlaceholderText('    Escribe o pega la direccion de tu video y da enter ..')
         self.oculta()
@@ -96,7 +107,7 @@ class v_skytube(QtGui.QDialog):
 
 
 
-        self.vskytube.lbl_barr.setText(str('\r %s MB / %s MB - %s kbps/s - %s seg' % (cant_descargada_MB, tamano_total_MB,velocidad_descarga,tiempo_faltante)))
+        self.vskytube.lbl_barr.setText(str('\r %s MB / %s MB - %s kb/s - %s seg' % (cant_descargada_MB, tamano_total_MB,velocidad_descarga,tiempo_faltante)))
         self.vskytube.lbl_barr.repaint()
         self.vskytube.p_bar.setValue(cant_descargada)
         QtCore.QCoreApplication.processEvents()
@@ -104,7 +115,20 @@ class v_skytube(QtGui.QDialog):
 
 
 
+    def webVid(self,video,imagen,vevo):
 
+        if vevo== 'ok':
+            self.vskytube.web.setHtml('''
+            <br>
+            <br>
+            <br>
+            <body bgcolor="#000000"></body>
+            <a href="'''+video+'''"><center> <h1> <font face="Comic Sans MS,arial,verdana" color="white">Click Aqui para Reproducir el Video</a>
+            ''')
+        else:
+            self.vskytube.web.load(QtCore.QUrl(video))
+            self.vskytube.web.show()
+        QtCore.QCoreApplication.processEvents()
 
 # revisado Linux, Windows
     def formato_combo(self):
@@ -117,7 +141,7 @@ class v_skytube(QtGui.QDialog):
         self.vskytube.treeView.setVisible(False)
         self.vskytube.btn_folder_2.setVisible(False)
         self.vskytube.lbl_perfil.setVisible(False)
-        self.vskytube.groupBox.setVisible(False)
+        #self.vskytube.groupBox.setVisible(False)
         self.vskytube.groupBox_2.setVisible(False)
         self.vskytube.btn_add.setVisible(False)
         self.vskytube.ck_lst_auto.setVisible(False)
@@ -139,14 +163,18 @@ class v_skytube(QtGui.QDialog):
             desc = 'https://dl.dropboxusercontent.com/s/ux463io3iyybh74/ffmpeg?dl=1&token_hash=AAHE6cs1LXreRN_mspjpLA_w7oaucYFUKeqxFJXZL8rh0Q'
             filename = 'ffmpeg'
 
+        if 'linux' in self.sistema():
+            #32bits
+            desc = 'https://dl.dropboxusercontent.com/s/irpst77slohbjcy/ffmpeg?dl=1&token_hash=AAH3bYjsl8k-6x0CQnEC4VVkWq-BkrQ2Qac8QfTJGHEymg'
+            #64bits
+            #desc = 'https://dl.dropboxusercontent.com/s/bl464mn9da3778z/ffmpeg?dl=1&token_hash=AAGYU2ttPlIXFCrokHxVGXLutuoiGDG3QraD6SzkGJy76A'
+
+            filename = 'ffmpeg'
+
         QtCore.QCoreApplication.processEvents()
         #QtGui.QMessageBox.about(self,'Descarga ..', 'Comenzara la descarga de  FFMPEG ')
         urllib.request.urlretrieve(desc, filename,reporthook=self.funcionprogreso)
         QtGui.QMessageBox.about(self,'Descarga ..', 'Finalizo la descarga de  FFMPEG ')
-
-
-
-
 
 
 # revisado Linux, Windows
@@ -166,7 +194,7 @@ class v_skytube(QtGui.QDialog):
                     if respuesta == QtGui.QMessageBox.Yes:
                         item = self.vskytube.lst_encola.takeItem(index)
                         del item
-                        self.vskytube.groupBox.setVisible(False)
+                        #self.vskytube.groupBox.setVisible(False)
 
         except:
             QtGui.QMessageBox.about(self,'Error Link','No hay Link Que eliminar')
@@ -184,31 +212,62 @@ class v_skytube(QtGui.QDialog):
 
 
 
-
-    def descarga_lista(self):
+    def ffmpeg(self):
         if 'win32' in self.sistema() or 'win64' in self.sistema():
                 if self.formato() == 'mp3':
                     if os.path.isfile('ffmpeg.exe'):
-                        pass
+                        return True
                     else:
                         respuesta = QtGui.QMessageBox.question(self, 'Descarga Mp3 ', 'Necesitas ffmpeg  para descargar MP3 \n'
                                                         'Quieres descargarlo? ', QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
                         if respuesta == QtGui.QMessageBox.Yes:
                             self.formato_combo()
+                            return True
                         else:
-                            return
+                            return False
+                else:
+                    return True
 
         if 'darwin' in self.sistema():
                 if self.formato() == 'mp3':
                     if os.path.isfile('ffmpeg'):
-                        pass
+                        return True
                     else:
                         respuesta = QtGui.QMessageBox.question(self, 'Descarga Mp3 ', 'Necesitas ffmpeg  para descargar MP3 \n'
                                                         'Quieres descargarlo? ', QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
                         if respuesta == QtGui.QMessageBox.Yes:
                             self.formato_combo()
+                            return True
                         else:
-                            return
+                            return False
+                else:
+                    return True
+
+        if 'linux' in self.sistema():
+                if self.formato() == 'mp3':
+                    if os.path.isfile('ffmpeg'):
+                        return True
+                    else:
+                        respuesta = QtGui.QMessageBox.question(self, 'Descarga Mp3 ', 'Necesitas ffmpeg  para descargar MP3 \n'
+                                                        'Quieres descargarlo? ', QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
+                        if respuesta == QtGui.QMessageBox.Yes:
+                            self.formato_combo()
+                            return True
+                        else:
+                            return False
+                else:
+                    return True
+
+
+    def descarga_lista(self):
+
+        self.vskytube.p_bar.setMinimum(0)
+
+        if self.ffmpeg():
+            pass
+        else:
+            return
+
 
         self.vskytube.ck_captura.setChecked(False)
 
@@ -226,7 +285,7 @@ class v_skytube(QtGui.QDialog):
         self.vskytube.treeView.setVisible(False)
         self.vskytube.btn_folder_2.setVisible(False)
         self.vskytube.lbl_perfil.setVisible(False)
-        self.vskytube.groupBox.setVisible(False)
+        #self.vskytube.groupBox.setVisible(False)
         self.vskytube.groupBox_2.setVisible(False)
         self.vskytube.btn_add.setVisible(False)
         self.vskytube.ck_lst_auto.setVisible(False)
@@ -243,7 +302,7 @@ class v_skytube(QtGui.QDialog):
             self.vskytube.lbl_desc.setStyleSheet("color:red;")
             self.vskytube.lbl_desc.setVisible(True)
             self.vskytube.p_bar.setMinimum(0)
-            video =Pafy(i)
+            video =pafy.new(i)
             if self.formato() == 'mp3':
                 bestaudio = video.getbestaudio()
                 size = bestaudio.get_filesize()
@@ -301,7 +360,7 @@ class v_skytube(QtGui.QDialog):
                     mp3 = os.path.join (os.environ['USERPROFILE'],'videos') + '\\' + titulo + '.mp3'
                     self.ejecutaExe('ffmpeg.exe -i \"%s\" -y \"%s\"' % (m4a , mp3))
                     os.remove(filename)
-                if 'darwin' in self.sistema():
+                if 'darwin' in self.sistema() or 'linux' in self.sistema():
                     m4a = os.path.join (os.environ['HOME'],'Movies') + '/' + titulo + '.' + extension
                     mp3 = os.path.join (os.environ['HOME'],'Movies') + '/' + titulo + '.mp3'
                     self.ejecutaExe('./ffmpeg -i \"%s\" -y \"%s\"' % (m4a , mp3))
@@ -313,7 +372,7 @@ class v_skytube(QtGui.QDialog):
         self.setclipboard()
         self.vskytube.lineEdit.clear()
         self.crea_directorio()
-        self.resize(880,321)
+        self.resize(880,480)
         QtCore.QCoreApplication.processEvents()
         self.muestra()
         self.vskytube.lst_encola.clear()
@@ -323,25 +382,60 @@ class v_skytube(QtGui.QDialog):
         try:
 
             video_id = self.vskytube.lineEdit.text()
-            if len(video_id) == 11:
-                url= 'http://www.youtube.com/watch?v=' + video_id
 
+            if len(video_id.split('list=')) == 2:
+                self.crea_lista()
+                video_id = video_id.split('list=')
+                if len(video_id) == 2:
+                    QtGui.QMessageBox.about(self,'PlayList Detectada! ','Estas apunto de  agregar una Lista de '
+                                                                        'reproduccion,  \n esto puede tardar varios minutos!' )
+                    playlist=pafy.get_playlist('http://www.youtube.com/playlist?list=' + video_id[1])
+                    num = 0
+                    for i in range (len(playlist['items'])):
+                        global url
+                        url= 'http://www.youtube.com/watch?v=' + playlist['items'][num]['pafy'].videoid
+                        print (url)
+                        items = []
+                        for index in range(self.vskytube.lst_encola.count()):
+                            items.append(self.vskytube.lst_encola.item(index).text())
 
+                        existe = 'No'
+                        for i in items:
+                             if url == i:
+                                 existe = 'Si'
 
-            elif len(str(video_id).split('?v=')) == 2:
-                video_id = video_id.split('?v=')
+                        if existe == 'No':
+                            self.setclipboard()
+                            if pafy.new(url):
+                                self.vskytube.lst_encola.addItem(url)
+                                QtCore.QCoreApplication.processEvents()
 
+                        else:
 
+                            self.setclipboard()
+                            QtGui.QMessageBox.about(self,'Alerta Link! ','Este Link ya fue agregado a la lista!' )
+
+                        num +=1
+                self.vskytube.lineEdit.clear()
+                url_vid= 'about:blank'
+                return
+            if len(video_id.split('v=')) == 2:
+                video_id = video_id.split('v=')
+                if len(video_id) == 2:
+                    global url
+                    url= 'http://www.youtube.com/watch?v=' + video_id[1]
+                    url_vid= 'http://www.youtube.com/embed/' + video_id[1]
+                else:
+                    global url
+                    url= 'http://www.youtube.com/watch?v=' + video_id
+                    url_vid= 'http://www.youtube.com/embed/' + video_id
 
             else:
                 self.setclipboard()
                 self.vskytube.lineEdit.clear()
                 QtGui.QMessageBox.about(self,'Alerta Link! ','Link No valido!' )
                 return
-            if len(video_id) == 2:
-                url= 'http://www.youtube.com/watch?v=' + video_id[1]
-            else:
-                url= 'http://www.youtube.com/watch?v=' + video_id
+
 
 
 
@@ -357,7 +451,7 @@ class v_skytube(QtGui.QDialog):
 
             if existe == 'No':
                 self.setclipboard()
-                if Pafy(url):
+                if pafy.new(url):
                     self.vskytube.lst_encola.addItem(url)
                     self.vskytube.lineEdit.clear()
             else:
@@ -424,7 +518,7 @@ class v_skytube(QtGui.QDialog):
 
         if self.vskytube.btn_folder.text() == '>':
             self.oculta()
-            self.resize(880,321)
+            self.resize(880,480)
             self.vskytube.treeView.setVisible(True)
             self.vskytube.lbl_perfil.setVisible(True)
             self.vskytube.btn_folder_2.setVisible(True)
@@ -477,7 +571,7 @@ class v_skytube(QtGui.QDialog):
 
         if self.vskytube.btn_add.text() == '>':
             self.oculta()
-            self.resize(880,321)
+            self.resize(880,480)
             self.vskytube.lst_encola.setVisible(True)
             self.vskytube.btn_add_lista.setVisible(True)
             self.vskytube.btn_add_video.setVisible(True)
@@ -512,6 +606,7 @@ class v_skytube(QtGui.QDialog):
         self.vskytube.btn_de_item.setVisible(False)
         self.vskytube.lbl_barr.setVisible(False)
         self.vskytube.p_bar.setVisible(False)
+
 
 
     def donapaypal(self):
@@ -615,30 +710,14 @@ class v_skytube(QtGui.QDialog):
     def descarga(self):
         try:
             self.vskytube.p_bar.setMinimum(0)
-            if 'win32' in self.sistema() or 'win64' in self.sistema():
-                if self.formato() == 'mp3':
-                    if os.path.isfile('ffmpeg.exe'):
-                        pass
-                    else:
-                        respuesta = QtGui.QMessageBox.question(self, 'Descarga Mp3 ', 'Necesitas ffmpeg  para descargar MP3 \n'
-                                                        'Quieres descargarlo? ', QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
-                        if respuesta == QtGui.QMessageBox.Yes:
-                            self.formato_combo()
-                        else:
-                            return
 
-            if 'darwin' in self.sistema():
-                if self.formato() == 'mp3':
-                    if os.path.isfile('ffmpeg'):
-                        pass
-                    else:
-                        respuesta = QtGui.QMessageBox.question(self, 'Descarga Mp3 ', 'Necesitas ffmpeg  para descargar MP3 \n'
-                                                        'Quieres descargarlo? ', QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
-                        if respuesta == QtGui.QMessageBox.Yes:
-                            self.formato_combo()
-                        else:
-                            return
-            video =Pafy(url)
+            if self.ffmpeg():
+                pass
+            else:
+                return
+
+
+            video =pafy.new(url)
             if self.formato() == 'mp3':
                 bestaudio = video.getbestaudio()
                 size = bestaudio.get_filesize()
@@ -658,7 +737,7 @@ class v_skytube(QtGui.QDialog):
             self.vskytube.treeView.setVisible(False)
             self.vskytube.btn_folder_2.setVisible(False)
             self.vskytube.lbl_perfil.setVisible(False)
-            self.vskytube.groupBox.setVisible(False)
+            #self.vskytube.groupBox.setVisible(False)
             self.vskytube.groupBox_2.setVisible(False)
             self.vskytube.btn_add.setVisible(False)
             self.vskytube.ck_lst_auto.setVisible(False)
@@ -720,7 +799,7 @@ class v_skytube(QtGui.QDialog):
 
                     self.ejecutaExe('ffmpeg.exe -i \"%s\" -y \"%s\"' % (m4a , mp3))
                     os.remove(filename)
-                if 'darwin' in self.sistema():
+                if 'darwin' in self.sistema() or 'linux' in self.sistema():
                     m4a = os.path.join (os.environ['HOME'],'Movies') + '/' + titulo + '.' + extension
                     mp3 = os.path.join (os.environ['HOME'],'Movies') + '/' + titulo + '.mp3'
 
@@ -732,7 +811,7 @@ class v_skytube(QtGui.QDialog):
             self.vskytube.lineEdit.clear()
             QtGui.QMessageBox.about(self,'Descarga Finalizada', ' Tu descarga Finalizo')
             self.crea_directorio()
-            self.resize(880,321)
+            self.resize(880,480)
             QtCore.QCoreApplication.processEvents()
             self.muestra()
 
@@ -756,7 +835,7 @@ class v_skytube(QtGui.QDialog):
         self.vskytube.ck_lst_auto.setVisible(True)
         self.vskytube.ck_captura.setVisible(True)
         self.vskytube.lbl_desc.setVisible(False)
-        self.vskytube.groupBox.setVisible(False)
+        #self.vskytube.groupBox.setVisible(False)
         self.vskytube.lbl_barr.setVisible(False)
         self.vskytube.p_bar.setVisible(False)
         self.vskytube.lineEdit.clear()
@@ -782,53 +861,38 @@ class v_skytube(QtGui.QDialog):
 
     def valida_lista(self):
         try:
-            self.vskytube.groupBox.setVisible(False)
-            self.vskytube.lbl_imagen.setText('sin imagen')
-            if os.path.isfile(os.path.dirname(sys.executable)+ '\\skytube.jpg'):
-                os.remove(os.path.dirname(sys.executable) + '\\skytube.jpg')
-
-            if os.path.isfile('/tmp/skytube.jpg'):
-                os.remove('/tmp/skytube.jpg')
+            self.vskytube.web.load(QtCore.QUrl('about:blank'))
+            self.vskytube.web.show()
 
             item = self.vskytube.lst_encola.currentItem()
             url = item.text()
 
-            video = Pafy(url)
-            best = video.getbest(preftype=self.formato())
-            if self.formato() == 'mp3':
-                self.vskytube.lbl_calidad.setText(' Extencion: mp3')
-            else:
-                self.vskytube.lbl_calidad.setText(best.resolution + ' Extencion: ' + best.extension)
+            video_id = url
 
-            self.vskytube.groupBox.setTitle(video.title)
+
+            if len(video_id.split('v=')) == 2:
+                video_id = video_id.split('v=')
+            if len(video_id) == 2:
+                url_vid= 'http://www.youtube.com/embed/' + video_id[1]
+            else:
+                url_vid= 'http://www.youtube.com/embed/' + video_id
+
+            video = pafy.new(url)
+            best = video.getbest(preftype=self.formato())
             self.vskytube.lbl_autor.setText(video.author)
-            self.vskytube.lbl_duracion.setText(video.duration)
-            self.vskytube.lbl_id.setText(video.videoid)
-            self.vskytube.lbl_rating.setText(str(video.rating))
-            self.vskytube.lbl_visto.setText(str(video.viewcount))
+
             self.vskytube.btn_valida_2.setVisible(False)
 
-            url = video.thumb
-            if 'win32' in self.sistema() or 'win64' in self.sistema():
-                file = ('skytube.jpg')
-            if 'linux' in self.sistema():
-                file = ('/tmp/skytube.jpg')
-            if 'darwin' in self.sistema():
-                file = ('skytube.jpg')
+            url_img = video.bigthumb
 
-            urllib.request.urlretrieve(url, file)
+            if 'VEVO' in video.author:
+                self.webVid(best.url,url_img,'ok')
 
-            if 'win32' in self.sistema() or 'win64' in self.sistema():
-                img = (os.path.dirname(sys.executable) + '\skytube.jpg')
-            if 'linux' in self.sistema():
-                img = ('/tmp/skytube.jpg')
-            if 'darwin' in self.sistema():
-                img = ('/skytube.jpg')
+            else:
+                self.webVid(url_vid,url_img,'no')
 
-            self.vskytube.lbl_imagen.setPixmap(QtGui.QPixmap(img))
-            self.vskytube.groupBox.setVisible(True)
         except Exception as e:
-            self.vskytube.groupBox.setVisible(False)
+            #self.vskytube.groupBox.setVisible(False)
             QtGui.QMessageBox.about(self,'Error en Link ','El Link : ' + item.text() + ' No existe..\n Se eliminara de la lista..' + str(e))
             self.elimina_item()
 
@@ -836,77 +900,73 @@ class v_skytube(QtGui.QDialog):
     def valida(self):
         try:
             self.oculta()
-
-            self.vskytube.groupBox.setVisible(False)
             self.resize(585,121)
-            self.vskytube.lbl_imagen.setText('sin imagen')
-            if os.path.isfile(os.path.dirname(sys.executable)+ '\\skytube.jpg'):
-                os.remove(os.path.dirname(sys.executable) + '\\skytube.jpg')
-
-            if os.path.isfile('/tmp/skytube.jpg'):
-                os.remove('/tmp/skytube.jpg')
-
-            self.vskytube.groupBox.setVisible(True)
-
             video_id = self.vskytube.lineEdit.text()
 
             if len(video_id) == 11:
                 url= 'http://www.youtube.com/watch?v=' + video_id
+                url_vid= 'http://www.youtube.com/embed/' + video_id
 
+            if len(video_id.split('list=')) == 2:
+                video_id = video_id.split('list=')
+                print(video_id)
+                if len(video_id) == 2:
+                    self.add()
+                url_vid='about:blank'
+                return 'termine'
+                sys.exit(0)
 
-            if video_id.split('?v=') == 1:
-                video_id = video_id.split('?v=')
+            if len(video_id.split('v=')) == 2:
+                video_id = video_id.split('v=')
+                if len(video_id) == 2:
+                    global url
+                    url= 'http://www.youtube.com/watch?v=' + video_id[1]
+                    url_vid= 'http://www.youtube.com/embed/' + video_id[1]
+                else:
+                    global url
+                    url= 'http://www.youtube.com/watch?v=' + video_id
+                    url_vid= 'http://www.youtube.com/embed/' + video_id
 
-            if len(video_id) == 1:
-                global url
-                url= 'http://www.youtube.com/watch?v=' + video_id[1]
-            else:
-                global url
-                url= 'http://www.youtube.com/watch?v=' + video_id
 
 
 
             global video
+            global best
 
-            video = Pafy(url)
-            best = video.getbest(preftype=self.formato())
-
+            video = pafy.new(url)
+            url_img = video.title
             if self.formato() == 'mp3':
-                self.vskytube.lbl_calidad.setText(' Extencion: mp3')
-            else:
-                self.vskytube.lbl_calidad.setText(best.resolution + ' Extencion: ' + best.extension)
 
-            self.vskytube.groupBox.setTitle(video.title)
+                best = video.getbestaudio()
+
+
+            else:
+
+                best = video.getbest(preftype=self.formato())
+
+
+
             self.vskytube.lbl_autor.setText(video.author)
-            self.vskytube.lbl_duracion.setText(video.duration)
-            self.vskytube.lbl_id.setText(video.videoid)
-            self.vskytube.lbl_rating.setText(str(video.rating))
-            self.vskytube.lbl_visto.setText(str(video.viewcount))
-            self.resize(579,288)
+            self.resize(579,480)
             self.vskytube.btn_valida_2.setVisible(True)
 
 
 
-            url_img = video.thumb
-            if 'win32' in self.sistema() or 'win64' in self.sistema():
-                file = ('skytube.jpg')
-            if 'linux' in self.sistema():
-                file = ('/tmp/skytube.jpg')
-            if 'darwin' in self.sistema():
-                file = ('skytube.jpg')
-            urllib.request.urlretrieve(url_img, file)
-            if 'win32' in self.sistema() or 'win64' in self.sistema():
-                img = (os.path.dirname(sys.executable) + '\skytube.jpg')
-            if 'linux' in self.sistema():
-                img = ('/tmp/skytube.jpg')
-            if 'darwin' in self.sistema():
-                img = ('/skytube.jpg')
 
 
-            self.vskytube.lbl_imagen.setPixmap(QtGui.QPixmap(img))
+
+            if 'VEVO' in video.author:
+                self.webVid(best.url,url_img,'ok')
+
+            else:
+                self.webVid(url_vid,url_img,'no')
+
+
         except Exception as e:
             QtGui.QMessageBox.about(self,'Error SkyTube ', ' No existe el video favor de verificar.')
-            QtGui.QMessageBox.about(self,'Error SkyTube ', str(e))
+            QtGui.QMessageBox.about(self,'Error SkyTube', str(e))
+
+
 
 def main():
     app = QtGui.QApplication(sys.argv)
@@ -918,5 +978,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-

@@ -1,4 +1,4 @@
-﻿SkyTube
+﻿SkyTube 2.1
 =======
 
 App para Descargar Videos de Youtube
@@ -33,6 +33,7 @@ dar en la lupa(buscar) 
 
 
 Baja la maxima calidad del video
+
 Baja la maxima calidad en Mp3
 
 

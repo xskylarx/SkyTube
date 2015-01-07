@@ -1,4 +1,4 @@
-SkyTube
+﻿SkyTube
 =======
 
 App para Descargar Videos de Youtube
@@ -17,7 +17,13 @@ pLAveFJXGSc
 
 
 
+o puedes añadir una lista de reproduccion!!
 
+https://www.youtube.com/playlist?list=PL9tY0BWXOZFvWi6WNdcokF_YvXUxyESRW
+
+ó
+
+PL9tY0BWXOZFvWi6WNdcokF_YvXUxyESRW
 
 
 
@@ -26,109 +32,13 @@ dar en la lupa(buscar) 
 
 
 
+Baja la maxima calidad del video
+Baja la maxima calidad en Mp3
 
-mostrara informacion del video:
-Titulo
-Autor
-ID
-Duracion
-Rating
-Cuantas veces a sido visto
-Imagen previa del video
-resolucion y extencion de descarga
 
 
 
-
-
-
-
-
-Baja la maxima calidad del video y en formato Mp4
-
-
-
-
-disponible en .exe para windows
-y codigo fuente para Mac y Linux ( no detecta el sisema aun es una BETA en construccion, por lo que solo tiene las rutas
-de VLC Windows)
-
-
-
-
-en versiones futuras se le añadira.
-
-
-
-
-Boton para abrir la carpeta de videos c:\users\TUUSUARIO\videos
-
-
-
-
-detecta VLC y habilita el boton para reproducir, de lo contrario lo deshabilita.
-
-
-
-
-
-
-
-
-
-
-
-
-----------------------------------------------------------------------------
-Funciona de modo consola de igual forma llamado al archivo skytubec.py URL
-
-
-
-
-
-
-
-
-http://www.youtube.com/watch?v=pLAveFJXGSc
-
-
-
-
-ó
-
-
-
-
-watch?v=pLAveFJXGSc
-
-
-
-
-ó
-
-
-
-
-pLAveFJXGSc
-
-
-
-
-
-
-
-
-solo descarga el video, mostrando porcentaje, velocidad de descarga, tiempo faltante para la finalizacion.
-
-
-
-
-----------------------------------------------------
-
-
-
-
-
+disponible en .exe para windows y codigo fuente para Mac y Linux 
 
 
 

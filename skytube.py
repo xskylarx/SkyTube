@@ -1,11 +1,16 @@
 __author__ = 'xskylarx'
  #!/usr/bi/python3
 # -*- coding: utf8 -*-
-# Python + PyQt4 By Skylar
+# Python 3.4.2  + PyQt5 By Skylar
 #
 # Creado: 29 - sep - 2013
+# Ultima modificacion: 11 - Enero - 2015
 #      Por: xskylarx
 # xskyofx@gmail.com
+#Version 3.0
+# se Migra Codigo fuente a PyQt5, se agrega reproductor nativo en html5 para youtube videos de vevo y para videos locales,
+# se agrega funcion para actualizar software de forma semiautomatica, funcion de mensaje proporcionada por Juan Carlos Paco, Comunidad python espanol
+#
 # Version 2.0-  se añade compatibilidad con listas de reproduccion, se pueden escoger que videos descargar de
 #       dicha lista, se añade reproductor nativo en la aplicacion para ver el video en vez de una imagen previa
 #       se actualiza plugin para descargar videos de VEVO
@@ -162,7 +167,7 @@ class v_skytube(QtWidgets.QDialog):
 
 
     def check_for_updates(self):
-                """Method to check for updates from Git repo versus this version."""
+                """Funcion para mostrar nueva version, proporcianada por Juancalos Paco Comunidad python espanol"""
                 version_local = __version__
                 version_web = str(urllib.request.urlopen(__source__).read().decode("utf8"))
                 if version_local != version_web:

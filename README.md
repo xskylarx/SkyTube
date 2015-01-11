@@ -1,4 +1,4 @@
-﻿SkyTube 2.1
+﻿SkyTube 3.0
 =======
 
 App para Descargar Videos de Youtube
@@ -49,16 +49,22 @@ para que funcione en linux y mac:
 
 
 instalar:
-Qt4  - desde la pagina oficial
-PyQt - easy_install PyQt4 -> o desde la pagina oficial de Pyqt hay binarios,dmg y exe
+Qt5  - desde la pagina oficial
+<br>
+PyQt5 - easy_install PyQt5 -> o desde la pagina oficial de Pyqt hay binarios,dmg y exe
+<br>
 Pafy - pip install Pafy
+<br>
 ---------------------------------------------
 
 Dudas ó Sugerencias: 
 
 https://www.facebook.com/xskylarx
+<br>
 https://www.twitter.com/xskylarx
+<br>
 https://plus.google.com/114802605768559072519
+<br>
 xskyofx@gmail.com
 ------------------------------------------------
 

@@ -11,7 +11,8 @@ build_exe_options = {
 if 'bdist_msi' in sys.argv:
     sys.argv += ['--initial-target-dir', 'C:\DHCP\\']
 
-includes = ["inicio","PyQt4.QtCore","PyQt4.QtGui","os","sys","PyQt4",'pafy']
+includes = ["inicio","os","sys",'pafy',"PyQt5.QtCore","PyQt5.QtGui", "PyQt5.QtWidgets","PyQt5.QtNetwork","PyQt5.QtWebKit","PyQt5.QtPrintSupport", "atexit",
+            "PyQt5.Qt","PyQt5.QtXmlPatterns"]
 excludes = []
 packages = []
 path = []
@@ -39,7 +40,7 @@ skytube = Executable(
 
 setup(
 
-    version = "2.0",
+    version = "2.1",
     description = "SkyTube Descarga Videos de Youtube",
     author = "skylar",
     name = "SkyTube",

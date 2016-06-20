@@ -60,6 +60,7 @@ class v_skytube(QtWidgets.QDialog):
         self.vskytube.lineEdit.returnPressed.connect(self.valida)
 
         self.vskytube.btn_add_video.clicked.connect(self.add)
+        self.vskytube.btn_folder_2.clicked.connect(self.folder)
         self.vskytube.btn_paypal.clicked.connect(self.donapaypal)
         self.vskytube.ck_captura.stateChanged['int'].connect(self.CapturaClip)
         self.vskytube.ck_vlc.stateChanged['int'].connect(self.vlc_checked)
@@ -319,11 +320,6 @@ class v_skytube(QtWidgets.QDialog):
 
 
             self.vskytube.lbl_desc.setText('Descargando ...' + video_id[0])
-            QtWidgets.QMessageBox.about(self, 'valida',
-                                        'id video.' + filename)
-
-            QtWidgets.QMessageBox.about(self, 'valida',
-                                        'id video.' + desc)
             urllib.request.urlretrieve(desc, filename, reporthook=self.funcionprogreso)
 
             if self.formato() == 'mp3' and self.sistema() == 'win32':

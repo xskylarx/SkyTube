@@ -1,4 +1,4 @@
-__author__ = 'soporte'
+__author__ = 'jsandoval'
 # Let's start with some default (for me) imports...
 import sys
 from cx_Freeze import setup, Executable
@@ -40,7 +40,7 @@ skytube = Executable(
 
 setup(
 
-    version = "2.1",
+    version = "4.0",
     description = "SkyTube Descarga Videos de Youtube",
     author = "skylar",
     name = "SkyTube",

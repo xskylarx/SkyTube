@@ -1,4 +1,4 @@
-﻿SkyTube 3.0
+﻿SkyTube 4.0
 =======
 
 App para Descargar Videos de Youtube
@@ -58,7 +58,8 @@ Pafy - pip install Pafy
 ---------------------------------------------
 
 Dudas ó Sugerencias: 
-
+https://www.facebook.com/skytubemx/
+<br>
 https://www.facebook.com/xskylarx
 <br>
 https://www.twitter.com/xskylarx
@@ -72,18 +73,4 @@ Si utilizas parte del codigo o el Codigo por favor haz referencia a este proyect
 
 
 si tienes ideas para mejorar la app o la quieres mejorar y tener acceso al proyecto por favor contactame.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
